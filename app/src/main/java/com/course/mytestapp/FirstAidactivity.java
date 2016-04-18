@@ -57,8 +57,8 @@ public class FirstAidactivity extends AppCompatActivity implements View.OnClickL
         wrongImg = (ImageView) findViewById(R.id.wrongImg);
         next = (Button) findViewById(R.id.mythNext);
         prev = (Button) findViewById(R.id.mythPrev);
-        imageIdNo = getResources().getIdentifier("no", "drawable", getPackageName());
-        imageIdYes = getResources().getIdentifier("yes", "drawable", getPackageName());
+        imageIdNo = R.drawable.no;
+        imageIdYes =  R.drawable.yes;
         or = (TextView) findViewById(R.id.or);
 
 
