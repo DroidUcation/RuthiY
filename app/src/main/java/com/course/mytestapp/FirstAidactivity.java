@@ -1,7 +1,6 @@
 package com.course.mytestapp;
 
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
@@ -13,6 +12,10 @@ import android.widget.LinearLayout;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.course.mytestapp.dbs.MythContract;
+
+import static com.course.mytestapp.dbs.MythContract.COLUMN_NAME_TITLE;
 
 public class FirstAidactivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -28,18 +31,23 @@ public class FirstAidactivity extends AppCompatActivity implements View.OnClickL
     Button prev;
     int imageIdNo;
     int imageIdYes;
+    Cursor cursor;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
         mythNum = 1;
+
+        cursor = getContentResolver().query(MythContract.CONTENT_URI, null, null, null, null);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.first_aid_list);
 
         findAllViews();
-        updateMythText();
+        updateMythText(mythNum);
         updateLayoutParams(true);
         wrongImg.setOnClickListener(this);
         rightImg.setOnClickListener(this);
@@ -48,7 +56,6 @@ public class FirstAidactivity extends AppCompatActivity implements View.OnClickL
         Toast.makeText(getApplicationContext(), "Click 'RIGHT' if u think it is correct and 'WRONG' if not", Toast.LENGTH_LONG).show();
 
  }
-
     private void findAllViews() {
         myth = (TextView) findViewById(R.id.myth);
         mythDesc = (TextView) findViewById(R.id.mythDesc);
@@ -68,29 +75,32 @@ public class FirstAidactivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         v.setClickable(false);
         int id = v.getId();
+        cursor.moveToPosition(mythNum-1);
+        //cursor = getContentResolver().query(MythContract.buildMythNo(mythNum), null, null, null, null);
+        //cursor.moveToFirst();
+        resIdYN = cursor.getString(cursor.getColumnIndex(MythContract.COLUMN_NAME_ISITTRUE));
 
         switch (id)
         {
             case R.id.rightImg : /*Toast.makeText(v.getContext(), "ruthi 0 ", Toast.LENGTH_SHORT).show();*/
-                resIdYN = (String) getResources().getText(this.getResources().getIdentifier("trueOrfalse" + mythNum, "string", this.getPackageName().toString()));
-                if (resIdYN.compareTo("true") == 0) {
+                if (resIdYN.compareTo("1") == 0) {
                     resultImg.setImageDrawable(getResources().getDrawable(imageIdNo));
                 } else {
                     resultImg.setImageDrawable(getResources().getDrawable(imageIdYes));
                 }
                 updateLayoutParams(false);
-                showMythDesc();
+                showMythDesc(mythNum);
                 v.setClickable(true);
                 break;
             case R.id.wrongImg:
-                resIdYN = (String) getResources().getText(this.getResources().getIdentifier("trueOrfalse" + mythNum, "string", this.getPackageName().toString()));
-                if (resIdYN.compareTo("false") == 0) {
+                //resIdYN = (String) getResources().getText(this.getResources().getIdentifier("trueOrfalse" + mythNum, "string", this.getPackageName().toString()));
+                if (resIdYN.compareTo("0") == 0) {
                     resultImg.setImageDrawable(getResources().getDrawable(imageIdNo));
                 } else {
                     resultImg.setImageDrawable(getResources().getDrawable(imageIdYes));
                 }
                 updateLayoutParams(false);
-                showMythDesc();
+                showMythDesc(mythNum);
                 v.setClickable(true);
                 break;
             case R.id.mythPrev:
@@ -100,7 +110,7 @@ public class FirstAidactivity extends AppCompatActivity implements View.OnClickL
                 }
                 else{
                     mythNum--;
-                    updateMythText();
+                    updateMythText(mythNum);
                     updateLayoutParams(true);
 
                 }
@@ -112,7 +122,7 @@ public class FirstAidactivity extends AppCompatActivity implements View.OnClickL
                 }
                 else {
                     mythNum++;
-                    updateMythText();
+                    updateMythText(mythNum);
                     updateLayoutParams(true);
                 }
                 break;
@@ -121,13 +131,22 @@ public class FirstAidactivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-    private void updateMythText() {
-        myth.setText(getResources().getText(this.getResources().getIdentifier("myth" + mythNum, "string", this.getPackageName().toString())));
+    private void updateMythText(Integer mythNum) {
+        cursor.moveToPosition(mythNum-1);
+        //cursor = getContentResolver().query(MythContract.buildMythNo(mythNum), null, null, null, null);
+        //cursor.moveToFirst();
+        myth.setText(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_TITLE)));
+        //myth.setText(getResources().getText(this.getResources().getIdentifier("myth" + this.mythNum, "string", this.getPackageName().toString())));
 
     }
 
-    private void showMythDesc() {
-        mythDesc.setText(getResources().getText(this.getResources().getIdentifier("mythDesc" + mythNum, "string", this.getPackageName())));
+    private void showMythDesc(Integer mythNum) {
+        cursor.moveToPosition(mythNum-1);
+        //cursor = getContentResolver().query(MythContract.buildMythNo(mythNum), null, null, null, null);
+        //cursor.moveToFirst();
+        mythDesc.setText(cursor.getString(cursor.getColumnIndex(MythContract.COLUMN_NAME_DESC)));
+
+        //mythDesc.setText(getResources().getText(this.getResources().getIdentifier("mythDesc" + mythNum, "string", this.getPackageName())));
     }
 
     private void updateLayoutParams(boolean onCreate) {
@@ -150,6 +169,7 @@ public class FirstAidactivity extends AppCompatActivity implements View.OnClickL
         }
         prev.setClickable(mythNum.equals(1) ? false : true);
         next.setClickable(mythNum.equals(5) ? false : true);
+        //prev.setTextColor(prev.getShadowColor());
     }
 
     private LayoutParams setWeight(View mythDesc, float weight) {
