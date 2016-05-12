@@ -150,7 +150,13 @@ public class MythProvider  extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        return null;
+        Uri returnUri = null;
+        SQLiteDatabase sqlDB = mDB.getWritableDatabase();
+        long _id = sqlDB.insert(MythContract.TABLE_NAME, MythContract.COLUMN_NAME_NULLABLE, values);
+        if ( _id > 0 )
+            returnUri = MythContract.buildMythUri(_id);
+        getContext().getContentResolver().notifyChange(uri, null);
+        return returnUri;
     }
 
     @Override
@@ -160,7 +166,8 @@ public class MythProvider  extends ContentProvider {
         int rowsAffected = 0;
         switch (uriType) {
             case MYTH:
-                rowsAffected = sqlDB.delete(DBHelper.DATABASE_NAME,
+                rowsAffected =
+                        sqlDB.delete(MythContract.TABLE_NAME,
                         selection, selectionArgs);
                 break;
             case MYTH_ID:
@@ -184,5 +191,17 @@ public class MythProvider  extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
+    }
+
+    public int getCount(String tableName){
+        Cursor  retCursor = mDB.getReadableDatabase().query(
+                tableName,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+        return retCursor.getCount();
     }
 }

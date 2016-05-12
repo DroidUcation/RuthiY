@@ -25,10 +25,10 @@
     <string name="mythDesc5"><![CDATA[What to do: Apply ice wrapped in a clean towel to the eye area to reduce the swelling. Don’t place ice directly on the affected area since this can cause an ice burn, similar to a sunburn. See a doctor to check for head injuries.]]></string>
 
 
-    <string name="trueOrfalse1">false</string>
-    <string name="trueOrfalse2">true</string>
-    <string name="trueOrfalse3">false</string>
-    <string name="trueOrfalse4">false</string>
-    <string name="trueOrfalse5">true</string>
+    <string name="trueOrfalse1">0</string>
+    <string name="trueOrfalse2">1</string>
+    <string name="trueOrfalse3">0</string>
+    <string name="trueOrfalse4">1</string>
+    <string name="trueOrfalse5">1</string>
 
 </resources>

@@ -116,7 +116,7 @@ public class FirstAidactivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case R.id.mythNext:
-                if (mythNum.equals(5)) {
+                if (mythNum.compareTo(5) == 1) {
                     Toast.makeText(this, "This is the LAST Myth", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -168,7 +168,7 @@ public class FirstAidactivity extends AppCompatActivity implements View.OnClickL
 
         }
         prev.setClickable(mythNum.equals(1) ? false : true);
-        next.setClickable(mythNum.equals(5) ? false : true);
+        next.setClickable((mythNum.compareTo(5) == 1) ? false : true);
         //prev.setTextColor(prev.getShadowColor());
     }
 

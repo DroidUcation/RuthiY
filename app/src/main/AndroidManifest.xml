@@ -24,6 +24,8 @@
             android:authorities="com.course.mytestapp.providers"
             android:multiprocess="true"
             android:name=".providers.MythProvider"></provider>
+        <service android:name=".services.FirstAidMythsService"/>
+        <receiver android:name=".services.FirstAidMythsService$AlarmReceiver" android:enabled="true"/>
     </application>
 
 </manifest>

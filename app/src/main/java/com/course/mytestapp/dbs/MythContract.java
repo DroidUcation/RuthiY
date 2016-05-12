@@ -62,6 +62,10 @@ public class MythContract implements BaseColumns {
         return uri.getPathSegments().get(1);
     }
 
+    public static Long getIdFromUri(Uri uri) {
+        return ContentUris.parseId(uri) ;
+    }
+
 
     /*public static Uri buildWeatherLocationWithStartDate(
             String locationSetting, long startDate) {
