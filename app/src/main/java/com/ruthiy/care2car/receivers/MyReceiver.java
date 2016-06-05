@@ -6,6 +6,8 @@ import android.content.Intent;
 
 public class MyReceiver extends BroadcastReceiver {
     public MyReceiver() {
+
+        
     }
 
     @Override
