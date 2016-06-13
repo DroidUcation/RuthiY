@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "288041308223",
+    "firebase_url": "https://project-5494685988080532007.firebaseio.com",
+    "project_id": "project-5494685988080532007",
+    "storage_bucket": "project-5494685988080532007.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:288041308223:android:940b55ccf5bc1744",
+        "android_client_info": {
+          "package_name": "com.ruthiy.care2car"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "288041308223-5630lirgefhhveapda2il1q94rs36r0d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

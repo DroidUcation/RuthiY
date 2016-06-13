@@ -1,6 +1,8 @@
 package com.ruthiy.care2car.activities;
 
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.Contacts;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ruthiy.care2car.R;
+import com.ruthiy.care2car.tables.TablesContract;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,5 +53,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void testContentProvider(){
+        String [] requestedColumns = { TablesContract.Request.COLUMN_CATEGORY_ID,  TablesContract.Request.COLUMN_AREA_ID};
+
+        Integer userId = 3;
+        Cursor requests = getApplicationContext().getContentResolver().query(
+                TablesContract.Request.CONTENT_URI,
+                requestedColumns,
+                TablesContract.Request.COLUMN_USER_ID + "='" + userId + "'",
+                null, null);
+
+        // A cursor is your primary interface to the query results.
+        Cursor cursor = getApplicationContext().getContentResolver().query(
+                TablesContract.Request.CONTENT_URI,
+                null, // leaving "columns" null just returns all the columns.
+                null, // cols for "where" clause
+                null, // values for "where" clause
+                null  // sort order
+        );
     }
 }
