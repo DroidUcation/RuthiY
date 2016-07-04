@@ -1,6 +1,15 @@
 package com.ruthiy.care2car.entities;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
+import android.util.Log;
+
+import com.ruthiy.care2car.tables.TablesContract;
+
+import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * Created by Ruthi.Y on 6/13/2016.
@@ -8,31 +17,36 @@ import java.sql.Date;
 
 /* B_REQUEST */
 
-public class Request {
-    long userId ;
-    long areaId ;
+public class Request implements Serializable {
+    String userId ;
+    String areaId ;
     String location ;
-    long categoryId ;
-    long engineVolumeId ;
-    Date requestStDate ;
-    Date requestEndDate ;
-    long requestStatusId ;
+    String categoryId ;
+    String engineVolumeId ;
+    String carTypeId ;
+    Timestamp requestStDate ;
+    Timestamp requestEndDate ;
+    String requestStatusId ;
     long volunteerId ; //fk user table
     String remarks ;
 
-    public long getUserId() {
+    public Request() {
+
+    }
+
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public long getAreaId() {
+    public String getAreaId() {
         return areaId;
     }
 
-    public void setAreaId(long areaId) {
+    public void setAreaId(String areaId) {
         this.areaId = areaId;
     }
 
@@ -44,35 +58,35 @@ public class Request {
         this.location = location;
     }
 
-    public long getCategoryId() {
+    public String getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(long categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
 
-    public long getEngineVolumeId() {
+    public String getEngineVolumeId() {
         return engineVolumeId;
     }
 
-    public void setEngineVolumeId(long engineVolumeId) {
+    public void setEngineVolumeId(String engineVolumeId) {
         this.engineVolumeId = engineVolumeId;
     }
 
-    public Date getRequestStDate() {
+    public Timestamp getRequestStDate() {
         return requestStDate;
     }
 
-    public void setRequestStDate(Date requestStDate) {
+    public void setRequestStDate(Timestamp requestStDate) {
         this.requestStDate = requestStDate;
     }
 
-    public Date getRequestEndDate() {
+    public Timestamp getRequestEndDate() {
         return requestEndDate;
     }
 
-    public void setRequestEndDate(Date requestEndDate) {
+    public void setRequestEndDate(Timestamp requestEndDate) {
         this.requestEndDate = requestEndDate;
     }
 
@@ -84,11 +98,11 @@ public class Request {
         this.volunteerId = volunteerId;
     }
 
-    public long getRequestStatusId() {
+    public String getRequestStatusId() {
         return requestStatusId;
     }
 
-    public void setRequestStatusId(long requestStatusId) {
+    public void setRequestStatusId(String requestStatusId) {
         this.requestStatusId = requestStatusId;
     }
 
@@ -98,5 +112,46 @@ public class Request {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public String getCarTypeId() { return carTypeId; }
+
+    public void setCarTypeId(String carTypeId) {this.carTypeId = carTypeId;    }
+
+    /*public ContentValues getForInsert(){
+        ContentValues initialValues = new ContentValues();
+
+        initialValues.put(TablesContract.Request.COLUMN_AREA_ID, this.getAreaId());
+        initialValues.put(TablesContract.Request.COLUMN_CATEGORY_ID, this.getCategoryId());
+        initialValues.put(TablesContract.Request.COLUMN_ENGINE_VOLUME_ID, this.getEngineVolumeId());
+        initialValues.put(TablesContract.Request.COLUMN_LOCATION, this.getLocation());
+        initialValues.put(TablesContract.Request.COLUMN_REMARKS, this.getRemarks());
+        initialValues.put(TablesContract.Request.COLUMN_REQUEST_END_DATE,
+                this.getRequestEndDate() != null ? this.getRequestEndDate().toString(): null);
+        initialValues.put(TablesContract.Request.COLUMN_REQUEST_ST_DATE,
+                this.getRequestStDate()!=null ? this.getRequestStDate().toString(): null);
+        initialValues.put(TablesContract.Request.COLUMN_REQUEST_STATUS_ID, this.getRequestStatusId());
+        initialValues.put(TablesContract.Request.COLUMN_USER_ID, this.getUserId());
+        initialValues.put(TablesContract.Request.COLUMN_VOLUNTEER_ID, this.getVolunteerId());
+
+        Log.i("entities.Request:", "getForInsert called");
+        return initialValues;
+    }*/
+
+    public static Request getObjectByCursor(Cursor cursor){
+        Request request = new Request();
+        //cursor = getContentResolver().query(MythContract.buildMythNo(mythNum), null, null, null, null);
+        cursor.moveToFirst();
+
+        request.setLocation(cursor.getString(cursor.getColumnIndex(TablesContract.Request.COLUMN_LOCATION)));
+        request.setAreaId(cursor.getString(cursor.getColumnIndex(TablesContract.Request.COLUMN_AREA_ID)));
+        request.setCategoryId(cursor.getString(cursor.getColumnIndex(TablesContract.Request.COLUMN_CATEGORY_ID)));
+        request.setEngineVolumeId(cursor.getString(cursor.getColumnIndex(TablesContract.Request.COLUMN_ENGINE_VOLUME_ID)));
+        request.setRequestStDate(Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(TablesContract.Request.COLUMN_REQUEST_ST_DATE))));
+        request.setRequestStatusId(cursor.getString(cursor.getColumnIndex(TablesContract.Request.COLUMN_REQUEST_STATUS_ID)));
+        request.setRemarks(cursor.getString(cursor.getColumnIndex(TablesContract.Request.COLUMN_REMARKS)));
+
+        Log.i("getObjectById .Request:", "getForInsert called");
+        return request;
     }
 }

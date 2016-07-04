@@ -45,7 +45,7 @@ public class RequestProvider extends ContentProvider {
     // integer values used in content URI
     static final int REQUESTS = 1;
     static final int REQUEST_ID = 2;
-    static final int REQUEST_DETAILS = 3;
+    //static final int REQUEST_DETAILS = 3;
 
     private static final SQLiteQueryBuilder sRequestQueryBuilder;
 
@@ -71,9 +71,9 @@ public class RequestProvider extends ContentProvider {
     static final UriMatcher uriMatcher;
     static{
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(TablesContract.CONTENT_AUTHORITY, "requests", REQUESTS);
-        uriMatcher.addURI(TablesContract.CONTENT_AUTHORITY, "requests/#", REQUEST_ID);
-        uriMatcher.addURI(TablesContract.CONTENT_AUTHORITY, "requests/#", REQUEST_DETAILS);
+        uriMatcher.addURI(TablesContract.CONTENT_AUTHORITY, TablesContract.Request.PATH , REQUESTS);
+        uriMatcher.addURI(TablesContract.CONTENT_AUTHORITY, TablesContract.Request.PATH +"/#", REQUEST_ID);
+        //uriMatcher.addURI(TablesContract.CONTENT_AUTHORITY, TablesContract.Request.PATH +"/#", REQUEST_DETAILS);
     }
 
     public RequestProvider() {
@@ -92,11 +92,11 @@ public class RequestProvider extends ContentProvider {
                 count = db.delete(TABLE_NAME, _ID +  " = " + id +
                         (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
                 break;
-            case REQUEST_DETAILS:
+           /* case REQUEST_DETAILS:
                  id = uri.getPathSegments().get(1);
                 count = db.delete(TABLE_NAME, _ID +  " = " + id +
                         (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-                break;
+                break;*/
 
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -118,8 +118,8 @@ public class RequestProvider extends ContentProvider {
                 return TablesContract.Request.CONTENT_ITEM_TYPE;
 
             /* Get a particular Request */
-            case REQUEST_DETAILS:
-                return TablesContract.Request.CONTENT_ITEM_TYPE;
+        /*    case REQUEST_DETAILS:
+                return TablesContract.Request.CONTENT_ITEM_TYPE;*/
 
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -171,10 +171,10 @@ public class RequestProvider extends ContentProvider {
                 qb.appendWhere(_ID + "=" + uri.getPathSegments().get(1));
                 c = qb.query(db,	projection,	selection, selectionArgs,null, null, sortOrder);
                 break;
-            case REQUEST_DETAILS:
+            /*case REQUEST_DETAILS:
                 selectionArgs = new String[]{uri.getPathSegments().get(1), uri.getPathSegments().get(2)};
                 c = sRequestQueryBuilder.query(db,	projection,	selection, selectionArgs,null, null, sortOrder);
-                break;
+                break;*/
 
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);

@@ -16,19 +16,70 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="#009688"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_main" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_gravity="bottom"
+        android:padding="5dp">
+        <com.ruthiy.care2car.utils.views.MyTextView
+            android:id="@+id/tv_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:gravity="start"
+            android:layout_marginBottom="5dp"
+            android:text="Your current Location is: "/>
+        <com.ruthiy.care2car.utils.views.MyTextView
+            android:id="@+id/tv_currentLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center|center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@id/tv_label"
+            android:text="Unknown Address"/>
+        <com.ruthiy.care2car.utils.views.MyButton
+            android:id="@+id/bn_ask4help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:background="#009688"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/bn_askHelp"
+
+            android:layout_below="@id/tv_currentLocation"/>
+        <com.ruthiy.care2car.utils.views.MyButton
+            android:id="@+id/bn_showMyRequests"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bn_ask4help"
+            android:layout_alignParentLeft="true"
+            android:textColor="#00C853"
+            android:textAllCaps="false"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="@string/bn_showMyRequests"/>
+        <com.ruthiy.care2car.utils.views.MyButton
+            android:id="@+id/bn_showMyVolunteering"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="?android:attr/borderlessButtonStyle"
+            android:textColor="#00C853"
+            android:textAllCaps="false"
+            android:text="@string/bn_showMyVolunteering"
+            android:layout_below="@id/bn_ask4help"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

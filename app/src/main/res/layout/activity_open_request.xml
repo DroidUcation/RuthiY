@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    >
+    <com.ruthiy.care2car.utils.views.MyTextView
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:singleLine="true"
+        android:textSize="15sp"
+        android:textColor="@color/black_87pc"/>
+
+    <Spinner
+        android:id="@+id/spinner_area"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:entries="@array/area"/>
+
+      <Spinner
+        android:id="@+id/spinner_category"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:entries="@array/category"
+        android:hint="@string/prompt_email"
+        />
+
+    <Spinner
+        android:id="@+id/spinner_engineValume"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:entries="@array/engineValume"
+        />
+
+    <Spinner
+        android:id="@+id/spinner_type"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:entries="@array/engineValume"/>
+
+    <com.ruthiy.care2car.utils.views.MyEditText
+        android:id="@+id/et_remarks"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top"
+        android:hint="@string/remarks" />
+
+    <com.ruthiy.care2car.utils.views.MyButton
+        android:id="@+id/bn_openRequset"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:textAllCaps="false"
+        android:background="#009688"
+        android:text="@string/accept" />
+
+
+</LinearLayout>

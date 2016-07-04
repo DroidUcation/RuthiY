@@ -198,13 +198,13 @@ public class TablesContract implements BaseColumns {
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         TablesContract._ID + " INTEGER PRIMARY KEY , " +
                         COLUMN_USER_ID +  INTEGER_TYPE + COMMA_SEP +
-                        COLUMN_AREA_ID +  INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_AREA_ID +  TEXT_TYPE + COMMA_SEP +
                         COLUMN_LOCATION +  TEXT_TYPE + COMMA_SEP +
-                        COLUMN_CATEGORY_ID +  INTEGER_TYPE + COMMA_SEP +
-                        COLUMN_ENGINE_VOLUME_ID +  INTEGER_TYPE + COMMA_SEP +
-                        COLUMN_REQUEST_ST_DATE +  DATE_TYPE + COMMA_SEP +
-                        COLUMN_REQUEST_END_DATE +  DATE_TYPE + COMMA_SEP +
-                        COLUMN_REQUEST_STATUS_ID +  INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_CATEGORY_ID +  TEXT_TYPE + COMMA_SEP +
+                        COLUMN_ENGINE_VOLUME_ID +  TEXT_TYPE + COMMA_SEP +
+                        COLUMN_REQUEST_ST_DATE +  TEXT_TYPE + COMMA_SEP +
+                        COLUMN_REQUEST_END_DATE +  TEXT_TYPE + COMMA_SEP +
+                        COLUMN_REQUEST_STATUS_ID +  TEXT_TYPE + COMMA_SEP +
                         COLUMN_VOLUNTEER_ID +  INTEGER_TYPE + COMMA_SEP +
                         COLUMN_REMARKS +  TEXT_TYPE+ ")";
 
@@ -239,8 +239,8 @@ public class TablesContract implements BaseColumns {
         }
     }
 
-    public static Uri buildUriWithId(long id) {
-        return ContentUris.withAppendedId(CONTENT_URI, id);
+    public static Uri buildUriWithId(long id, Uri contentUri) {
+        return ContentUris.withAppendedId(contentUri, id);
     }
 
     public static Long getIdFromUri(Uri uri) {

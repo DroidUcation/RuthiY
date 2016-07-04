@@ -15,11 +15,23 @@
       },
       "oauth_client": [
         {
+          "client_id": "288041308223-fsvg3v79artlatf3uk9fgeg119n60fa8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ruthiy.care2car",
+            "certificate_hash": "B6B1177D18B3AF5154E261C52E1971F971762782"
+          }
+        },
+        {
           "client_id": "288041308223-5630lirgefhhveapda2il1q94rs36r0d.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
-      "api_key": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAd1eshKBnTi_Z8z5v1wD99rHnhtvEa_9Y"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 1

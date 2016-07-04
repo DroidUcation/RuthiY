@@ -16,4 +16,116 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <!--    Permissions    -->
+    <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>
+    <string name="location_permission_denied">This sample requires location permission to enable the \'my location\' layer. Please try again and grant access to use the location.\nIf the permission has been permanently denied, it can be enabled from the System Settings &gt; Apps &gt; \'Google Maps API Demos\'.</string>
+    <string name="permission_required_toast">Location permission is required for this demo.</string>
+
+    <string name="remarks">Remarks</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="bn_askHelp">Ask4Help</string>
+    <string name="bn_showMyRequests">Show My Requests</string>
+    <string name="bn_showMyVolunteering">Show My Volunteering</string>
+    <string name="fine">fine</string>
+    <string name="cancel">cancel</string>
+
+
+    <string-array name="status">
+        <item>Active</item>
+        <item>InProgress</item>
+        <item>Closed</item>
+        <item>Resolved</item>
+    </string-array>
+
+    <string-array name="category">
+        <item>Engine Overheating</item>
+        <item>Electrical Issues</item>
+        <item>Puncture a tire</item>
+        <item><![CDATA[Engine Won\'\t Start, No Fuel]]></item>
+        <item><![CDATA[Engine Won\'\t Start, No Spark]]></item>
+        <item>Other</item>
+        <item>--What is the problem ? --</item>
+    </string-array>
+
+    <string-array name="type">
+        <item>Manullay Gear</item>
+        <item>Automathic Gear</item>
+        <item>Other</item>
+        <item>--Choose car type ? --</item>
+    </string-array>
+
+    <string-array name="area">
+
+        <item>Afula			</item>
+        <item>Akko			    </item>
+        <item>Arad			    </item>
+        <item>Ariel			</item>
+        <item>Ashdod			</item>
+        <item>Ashkelon		    </item>
+        <item>Bat Yam			</item>
+        <item>Beer Sheva		</item>
+        <item>Beit Shean		</item>
+        <item>Beit Shemesh	    </item>
+        <item>Betar Illit		</item>
+        <item>Bnei Berak		</item>
+        <item>Dimona			</item>
+        <item>Eilat			</item>
+        <item>Givatayim		</item>
+        <item>Hadera			</item>
+        <item>Haifa			</item>
+        <item>Herzliya		    </item>
+        <item>Hod HaSharon	    </item>
+        <item>Holon			</item>
+        <item>Jerusalem		</item>
+        <item>Karmiel			</item>
+        <item>Kfar Sava		</item>
+        <item>Kiryat Ata		</item>
+        <item>Kiryat Bialik	</item>
+        <item>Kiryat Gat		</item>
+        <item>Kiryat Malachi	</item>
+        <item>Kiryat Motzkin	</item>
+        <item>Kiryat Ono		</item>
+        <item>Kiryat Shemone	</item>
+        <item>Kiryat Yam		</item>
+        <item>Lod				</item>
+        <item>Maale Adumim	    </item>
+        <item>Maalot Tarshiha	</item>
+        <item>Migdal HaEmek	</item>
+        <item>Modiin			</item>
+        <item>Nahariya		    </item>
+        <item>Nazareth		    </item>
+        <item>Nazareth Illit	</item>
+        <item>Nes Ziona		</item>
+        <item>Nesher			</item>
+        <item>Netanya			</item>
+        <item>Netivot			</item>
+        <item>Or Yehuda		</item>
+        <item>Petah Tikva		</item>
+        <item>Raanana			</item>
+        <item>Ramat Hasharon	</item>
+        <item>Ramat-Gan		</item>
+        <item>Ramla			</item>
+        <item>Rehovot			</item>
+        <item>Rishon Lezion	</item>
+        <item>Rosh Ha\'\ayin	    </item>
+        <item>Sderot			</item>
+        <item>Tel Aviv		    </item>
+        <item>Tiberias		    </item>
+        <item>Tirat Carmel	    </item>
+        <item>Tsfat (Safed)	</item>
+        <item>Yavne			</item>
+        <item>Yehud-Monosson   </item>
+        <item>--Where you are now ? --</item>
+    </string-array>
+
+    <string-array name="engineValume">
+        <item>Less then 1000</item>
+        <item>Less then 2000</item>
+        <item>more than 2000</item>
+        <item>--Which engine you have ? -- </item>
+    </string-array>
+
 </resources>
