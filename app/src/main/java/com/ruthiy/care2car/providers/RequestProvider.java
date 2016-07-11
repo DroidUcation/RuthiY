@@ -33,7 +33,7 @@ public class RequestProvider extends ContentProvider {
     // fields for the database
     static final String _ID = TablesContract._ID;
     static final String AREA = TablesContract.Request.COLUMN_AREA_ID;
-    static final String USER = TablesContract.Request.COLUMN_USER_ID;
+    static final String USER = TablesContract.Request.COLUMN_USER_NAME;
     static final String CATEGORY = TablesContract.Request.COLUMN_CATEGORY_ID;
     static final String VOLUNTEER = TablesContract.Request.COLUMN_VOLUNTEER_ID;
     static final String STATUS = TablesContract.Request.COLUMN_REQUEST_STATUS_ID;
@@ -62,7 +62,7 @@ public class RequestProvider extends ContentProvider {
                         "." + TablesContract._ID + " INNER JOIN " +
                         TablesContract.Status.TABLE_NAME +
                         " ON " + TablesContract.Request.TABLE_NAME +
-                        "." + TablesContract.Request.COLUMN_USER_ID +
+                        "." + TablesContract.Request.COLUMN_USER_NAME +
                         " = " + TablesContract.User.TABLE_NAME +
                         "." + TablesContract._ID);
     }
@@ -71,8 +71,8 @@ public class RequestProvider extends ContentProvider {
     static final UriMatcher uriMatcher;
     static{
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(TablesContract.CONTENT_AUTHORITY, TablesContract.Request.PATH , REQUESTS);
-        uriMatcher.addURI(TablesContract.CONTENT_AUTHORITY, TablesContract.Request.PATH +"/#", REQUEST_ID);
+        uriMatcher.addURI(TablesContract.Request.CONTENT_AUTHORITY, TablesContract.Request.PATH , REQUESTS);
+        uriMatcher.addURI(TablesContract.Request.CONTENT_AUTHORITY, TablesContract.Request.PATH +"/#", REQUEST_ID);
         //uriMatcher.addURI(TablesContract.CONTENT_AUTHORITY, TablesContract.Request.PATH +"/#", REQUEST_DETAILS);
     }
 

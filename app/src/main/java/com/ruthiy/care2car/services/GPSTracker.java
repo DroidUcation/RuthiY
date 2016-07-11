@@ -250,6 +250,8 @@ public class GPSTracker extends Service implements LocationListener {
             sendBroadcast(poke);
         }
     }
+
+
   /*  private void getCurrentLocation() {
         double latitude =0;
         double longitude =0;

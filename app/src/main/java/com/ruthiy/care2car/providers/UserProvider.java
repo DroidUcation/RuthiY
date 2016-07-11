@@ -34,8 +34,9 @@ public class UserProvider extends ContentProvider {
     // fields for the database
     static final String _ID = TablesContract._ID;
     static final String AREA = TablesContract.User.COLUMN_AREA_ID;
-    static final String FIRST_NAME = TablesContract.User.COLUMN_FIRST_NAME;
-    static final String LAST_NAME = TablesContract.User.COLUMN_LAST_NAME;
+    static final String NAME = TablesContract.User.COLUMN_NAME;
+    /*static final String FIRST_NAME = TablesContract.User.COLUMN_FIRST_NAME;
+    static final String LAST_NAME = TablesContract.User.COLUMN_LAST_NAME;*/
     static final String PHONE_NUMBER = TablesContract.User.COLUMN_PHONE_NUMBER;
 
     // projection map for a query
@@ -49,8 +50,8 @@ public class UserProvider extends ContentProvider {
     static final UriMatcher uriMatcher;
     static{
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(TablesContract.CONTENT_AUTHORITY, "USERS", USERS);
-        uriMatcher.addURI(TablesContract.CONTENT_AUTHORITY, "USERS/#", USER_ID);
+        uriMatcher.addURI(TablesContract.User.CONTENT_AUTHORITY, TablesContract.User.PATH, USERS);
+        uriMatcher.addURI(TablesContract.User.CONTENT_AUTHORITY, TablesContract.User.PATH +"/#", USER_ID);
     }
 
     public UserProvider() {
@@ -82,11 +83,11 @@ public class UserProvider extends ContentProvider {
 
             /* Get all USERS records */
             case USERS:
-                return TablesContract.Request.CONTENT_TYPE;
+                return TablesContract.User.CONTENT_TYPE;
 
-            /* Get a particular Request */
+            /* Get a particular User */
             case USER_ID:
-                return TablesContract.Request.CONTENT_ITEM_TYPE;
+                return TablesContract.User.CONTENT_ITEM_TYPE;
 
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -100,7 +101,7 @@ public class UserProvider extends ContentProvider {
 
         long rowId = db.insert(TABLE_NAME, null, values);
         if (rowId > 0) {
-            Uri _uri = ContentUris.withAppendedId(TablesContract.Request.CONTENT_URI, rowId);
+            Uri _uri = ContentUris.withAppendedId(TablesContract.User.CONTENT_URI, rowId);
             getContext().getContentResolver().notifyChange(_uri, null);
             return _uri;
         }
@@ -139,7 +140,7 @@ public class UserProvider extends ContentProvider {
 
         if (sortOrder == null || sortOrder == ""){
             /*  By default sort on FIRST NAME */
-            sortOrder = FIRST_NAME;
+            sortOrder = NAME;
         }
         Cursor c = qb.query(db,	projection,	selection, selectionArgs,null, null, sortOrder);
 

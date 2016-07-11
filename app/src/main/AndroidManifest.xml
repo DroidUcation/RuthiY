@@ -26,8 +26,9 @@
         android:required="true" />
 
     <application
+        android:minSdkVersion="8"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/care2car"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -38,7 +39,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+            <!--    <category android:name="android.intent.category.LAUNCHER" />-->
             </intent-filter>
         </activity>
         <!--
@@ -53,10 +54,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
-
         <receiver
             android:name=".receivers.MyReceiver"
             android:enabled="true"
@@ -64,7 +61,12 @@
 
         <provider
             android:name=".providers.RequestProvider"
-            android:authorities="com.ruthiy.care2car.providers"
+            android:authorities="com.ruthiy.care2car.providers.requests"
+            android:enabled="true"
+            android:exported="true" />
+        <provider
+            android:name=".providers.UserProvider"
+            android:authorities="com.ruthiy.care2car.providers.users"
             android:enabled="true"
             android:exported="true" />
 
@@ -74,7 +76,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-             <!--   <category android:name="android.intent.category.LAUNCHER" />-->
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 

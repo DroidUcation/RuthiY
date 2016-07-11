@@ -1,12 +1,17 @@
 package com.ruthiy.care2car.activities;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,13 +33,24 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.common.api.Result;
+import com.google.android.gms.nearby.messages.Message;
+import com.google.gson.Gson;
 import com.ruthiy.care2car.R;
 import com.ruthiy.care2car.entities.Request;
 import com.ruthiy.care2car.entities.User;
+import com.ruthiy.care2car.tables.TablesContract;
 import com.ruthiy.care2car.utils.Config;
 import com.ruthiy.care2car.utils.views.MySpinnerAdapter;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +60,14 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
     Request openedRequest = new Request();
     User currentUser;
     User userFB ;
+    String area;
+    String userAddress;
+    Location userLocation;
+
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    public static final String Name = "nameKey";
+    SharedPreferences sharedpreferences;
+    Gson mGson = new Gson();
    /* public Typeface font = Typeface.createFromAsset(getAssets(),
             "fonts/openSans/OpenSans-Light.ttf");*/
 
@@ -51,52 +77,66 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
 
         setContentView(R.layout.activity_open_request);
         TextView location = (TextView) findViewById(R.id.location);
+        EditText userName = (EditText) findViewById(R.id.et_user_name);
+        EditText phone = (EditText) findViewById(R.id.et_user_phone);
 
         setupSpinnerAdapter(R.id.spinner_category, R.array.category, null);
         setupSpinnerAdapter(R.id.spinner_engineValume, R.array.engineValume, null);
         setupSpinnerAdapter(R.id.spinner_type, R.array.type, null);
         Bundle  b = this.getIntent().getExtras();
 
-        if (b.containsKey("area")) {
-            setupSpinnerAdapter(R.id.spinner_area, R.array.area, b.getString("area"));
-
-        }
         if (b.containsKey("user")) {
             ArrayList<User> users = getIntent().getParcelableArrayListExtra("user");
             for(User userDetails : users) {
                 Log.i("", userDetails.getName());
                 currentUser = userDetails;
             }
+            userName.setText(currentUser.getName());
+            userLocation = currentUser.getLocation();
+            phone.setText(currentUser.getPhoneNumber());
             getUserDetailsFromFireBase();
-            if(userFB!= null) {
-                Toast.makeText(getBaseContext(), "Hello " + userFB.getName(), Toast.LENGTH_LONG).show();
-            }
+
         }
         if (b.containsKey("address")) {
-            String address = b.getString("address");
-            location.setText(address!=null? address : "Uknown Address");
+            userAddress = b.getString("address");
+            location.setText(userAddress!=null? userAddress : "Uknown Address");
         }
 
+        if (b.containsKey("area")) {
+            area = b.getString("area");
+        }
 
         Button button = (Button) findViewById(R.id.bn_openRequset);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 request.setRequestStatusId("Active");
-                request.setLocation(null); //currentUser.getLocation()
+                request.setLocation(userAddress); //currentUser.getLocation()
                 TextView textView = (TextView) findViewById(R.id.et_remarks);
                 request.setRemarks(textView.getText().toString());
                 request.setRequestEndDate(null);
                 java.util.Date date= new java.util.Date();
                 request.setRequestStDate(new Timestamp(date.getTime()));
-                request.setUserId(currentUser.getPhoneNumber());
+                request.setUserPhone(currentUser.getPhoneNumber());
                 if(checkMandatoryFileds(request)) {
-                    saveRequestOnFireBase();
+                    Long requestId = saveRequestOnLocalDB(request);
+                    saveRequestOnFireBase(requestId);
+                    Intent intent = new Intent(OpenRequest.this, ViewRequestActivity.class);
+                    ArrayList<Location> list = new ArrayList<Location>();
+                    list.add(userLocation);
+                    intent.putParcelableArrayListExtra("userLocation", list);
+                    //confirmOpenRequestDialog();
+
+                    intent.putExtra("request", request.getRequestKey());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    if (intent != null) startActivity(intent);
                 }
 
             }
         });
     }
+
+
 
     private boolean checkMandatoryFileds(Request request) {
         return true;
@@ -127,8 +167,6 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (parent.getId()) {
-            case R.id.spinner_area:
-                request.setAreaId((String) parent.getSelectedItem());
             case R.id.spinner_category:
                 request.setCategoryId((String) parent.getSelectedItem());
             case R.id.spinner_engineValume:
@@ -143,61 +181,94 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
 
     }
 
-    public void saveRequestOnFireBase(){
-        Firebase.setAndroidContext(this);
-        Firebase ref = new Firebase(Config.FIREBASE_URL);
-        //Storing values to firebase
-        ref.child("Request").setValue(request);
-        //Value event listener for realtime data update
-        ref.addChildEventListener(new ChildEventListener() {
-        //ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
-                //adapter.add((String) dataSnapshot.child("title").getValue());
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                System.out.println("There are " + dataSnapshot.getChildrenCount() + " requsets");
-                for (com.firebase.client.DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    //Getting the data from snapshot
-                    Request request = postSnapshot.getValue(Request.class);
-                    //Adding it to a string
-                    String remarks = "Name: "+ request.getRemarks()+"\n\n";
-                    System.out.println("Requsets remarks is " + remarks);
-                }
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s)  {}
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
-            }
-        });
-
-        Firebase fbUsers = new Firebase(Config.FIREBASE_REQUESTS_USER_URL + currentUser.getPhoneNumber().toString());
-
-        //Storing values to firebase
-        fbUsers.push().child("Request").setValue(request);
-
-        Firebase fbAreas = new Firebase(Config.FIREBASE_REQUESTS_AREA_URL + currentUser.getAreaId().toString());
-        //Storing values to firebase
-        fbUsers.push().child("Request").setValue(request);
 
 
+    private Long saveRequestOnLocalDB(Request request) {
+        ContentValues initialValues = request.getForInsert(request);
+        // Insert the new row, returning the primary key value of the new row
+        Long newRowId;
+        Uri uri = getContentResolver().insert(TablesContract.Request.CONTENT_URI, initialValues);
+        newRowId = TablesContract.getIdFromUri(uri) ;
+
+
+        return newRowId;
     }
+
+    public void updateRequestKeyByIdOnLocalDB(Long requestId, String requestKey){
+        Cursor c = getContentResolver().query(TablesContract.Request.CONTENT_URI.buildUpon().appendPath(requestId.toString()
+        ).build(), null, null, null, null);
+        Request requestForUpdate = Request.getObjectByCursor(c);;
+        ContentValues initialValues = Request.getForInsert(requestForUpdate);
+        initialValues.put(TablesContract.Request.COLUMN_REQUEST_KEY, requestKey);
+        int ur2i = getContentResolver().update(TablesContract.Request.CONTENT_URI.buildUpon().appendPath(requestId.toString()).build(), initialValues, null,null );
+    }
+
+    public String getUserKeyFromSP(){
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        String userKey = sharedpreferences.getString("key", null);
+        return userKey;
+    }
+    public void saveRequestOnFireBase(Long requestId){
+        Firebase.setAndroidContext(this);
+        Firebase ref = new Firebase(Config.FIREBASE_REQUESTS_URL);
+        //Storing values to firebase
+        ref = ref.push();
+        ref.setValue(request);
+        String requestKey = ref.getKey();
+        request.setRequestKey(ref.getKey());
+        Log.d("TSG", "saveRequestOnFireBase: "+requestKey);
+
+        Firebase fbUsers = new Firebase(Config.FIREBASE_REQUESTS_USER_URL + getUserKeyFromSP());
+        //Storing values to firebase
+        fbUsers = fbUsers.push();
+        fbUsers.setValue(request);
+
+        Firebase fbAreas = new Firebase(Config.FIREBASE_REQUESTS_AREA_URL + area);
+        //Storing values to firebase
+        fbAreas = fbAreas.push();
+        fbAreas.setValue(request);
+        //sendFCMtoTopics();
+        updateRequestKeyByIdOnLocalDB(requestId, requestKey);
+    }
+
+
+   /* private void createPushNotification() {
+        final String GCM_API_KEY = "yourKey";
+        final int retries = 3;
+        final String notificationToken = "deviceNotificationToken";
+        Sender sender = new Sender(GCM_API_KEY);
+        Message msg = new Message.Builder().build();
+
+        try {
+            Result result = sender.send(msg, notificationToken, retries);
+
+            if (StringUtils.isEmpty(result.getErrorCodeName())) {
+                logger.debug("GCM Notification is sent successfully");
+                return true;
+            }
+
+            Log.e("Error occurred while sending push notification :" + result.getErrorCodeName());
+        } catch (InvalidRequestException e) {
+            Log.e("Invalid Request", e);
+        } catch (IOException e) {
+            Log.e("IO Exception", e);
+        }
+        return false;
+
+    }*/
 
     public void getUserDetailsFromFireBase(){
         Firebase.setAndroidContext(this);
         Firebase ref = new Firebase(Config.FIREBASE_USER_URL);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.child(getUserKeyFromSP()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 System.out.println("There are " + snapshot.getChildrenCount() + " blog posts");
-                userFB = (User) snapshot.child(currentUser.getPhoneNumber()).getValue();
-               /* for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                userFB = snapshot.getValue(User.class);
+                if(userFB!= null) {
+                    Toast.makeText(getBaseContext(), "Hello " + userFB.getName(), Toast.LENGTH_LONG).show();
+                }
+                /*for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     BlogPost post = postSnapshot.getValue(BlogPost.class);
                     System.out.println(post.getAuthor() + " - " + post.getTitle());
                 }*/
@@ -206,6 +277,37 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
             public void onCancelled(FirebaseError firebaseError) {
             }
         });
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private static void sendFCMtoTopics(){
+        try {
+            HttpURLConnection httpcon = (HttpURLConnection) ((new URL("https://fcm.googleapis.com/fcm/send").openConnection()));
+            httpcon.setDoOutput(true);
+            httpcon.setRequestProperty("Content-Type", "application/json");
+            httpcon.setRequestProperty("Authorization: key", "AIza...iD9wk");
+            httpcon.setRequestMethod("POST");
+            httpcon.connect();
+            System.out.println("Connected!");
+            byte[] outputBytes = "{\"notification\":{\"title\": \"My title\", \"text\": \"My text\", \"sound\": \"default\"}, \"to\": \"cAhmJfN...bNau9z\"}".getBytes("UTF-8");
+            OutputStream os = httpcon.getOutputStream();
+            os.write(outputBytes);
+            os.close();
+
+            // Reading response
+
+            InputStream input = httpcon.getInputStream();
+
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
+                for (String line; (line = reader.readLine()) != null;) {
+                    System.out.println(line);
+                }
+            }
+
+            System.out.println("Http POST request sent!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void confirmOpenRequestDialog(){

@@ -151,24 +151,33 @@ public class TablesContract implements BaseColumns {
     public static class User{
         public static final String TABLE_NAME = "B_USER";
         public static final String PATH = TABLE_NAME;
-        public final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
+        public static final String CONTENT_AUTHORITY = "com.ruthiy.care2car.providers.users";
+        public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
         public static final String CONTENT_TYPE = TablesContract.CONTENT_TYPE + PATH;
         public static final String CONTENT_ITEM_TYPE =TablesContract.CONTENT_ITEM_TYPE + PATH;
 
-        public static final String COLUMN_FIRST_NAME = "FIRST_NAME";
-        public static final String COLUMN_LAST_NAME = "LAST_NAME";
+        /*public static final String COLUMN_FIRST_NAME = "FIRST_NAME";
+        public static final String COLUMN_LAST_NAME = "LAST_NAME";*/
+        public static final String COLUMN_NAME = "NAME";
         public static final String COLUMN_PHONE_NUMBER = "PHONE_NUMBER";
+        public static final String COLUMN_USER_TOKEN = "USER_TOKEN";
         public static final String COLUMN_PASSWORD = "PASSWORD";
         public static final String COLUMN_AREA_ID = "AREA_ID";
         public static final String COLUMN_LOCATION = "LOCATION";
+        public static final String COLUMN_USER_KEY = "USER_KEY";
+
+        /*public static final String COLUMN_LOCATION_LATITUDE = "LOCATION_LATITUDE";
+        public static final String COLUMN_LOCATION_LONGITUDE = "LOCATION_LONGITUDE";*/
         private static final String SQL_CREATE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         TablesContract._ID + " INTEGER PRIMARY KEY , " +
-                        COLUMN_FIRST_NAME + TEXT_TYPE + COMMA_SEP +
-                        COLUMN_LAST_NAME + TEXT_TYPE + COMMA_SEP +
+                        COLUMN_NAME + TEXT_TYPE + COMMA_SEP +
+                        COLUMN_USER_KEY + TEXT_TYPE + COMMA_SEP +
                         COLUMN_PHONE_NUMBER + TEXT_TYPE + COMMA_SEP +
+                        COLUMN_USER_TOKEN + TEXT_TYPE + COMMA_SEP +
                         COLUMN_PASSWORD + TEXT_TYPE + COMMA_SEP +
-                        COLUMN_AREA_ID + INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_AREA_ID + TEXT_TYPE + COMMA_SEP +
                         COLUMN_LOCATION + TEXT_TYPE +")";
 
         public static String getSqlCreate() {
@@ -179,11 +188,15 @@ public class TablesContract implements BaseColumns {
     public static class Request {
         public static final String TABLE_NAME = "B_REQUEST";
         public static final String PATH = TABLE_NAME;
+        public static final String CONTENT_AUTHORITY = "com.ruthiy.care2car.providers.requests";
+        public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
         public static final String CONTENT_TYPE = TablesContract.CONTENT_TYPE + PATH;
         public static final String CONTENT_ITEM_TYPE =TablesContract.CONTENT_ITEM_TYPE + PATH;
 
-        public static final String COLUMN_USER_ID = "USER_ID";
+        public static final String COLUMN_USER_KEY = "USER_KEY";
+        public static final String COLUMN_USER_NAME = "USER_NAME";
+        public static final String COLUMN_USER_PHONE = "USER_PHONE";
         public static final String COLUMN_AREA_ID = "AREA_ID";
         public static final String COLUMN_LOCATION = "LOCATION";
         public static final String COLUMN_CATEGORY_ID = "CATEGORY_ID";
@@ -193,11 +206,18 @@ public class TablesContract implements BaseColumns {
         public static final String COLUMN_REQUEST_STATUS_ID = "REQUEST_STATUS_ID";
         public static final String COLUMN_VOLUNTEER_ID = "VOLUNTEER_ID"; //FK USER TABLE
         public static final String COLUMN_REMARKS = "REMARKS";
+        public static final String COLUMN_REQUEST_KEY = "REQUEST_KEY";
+        public static final String COLUMN_USER_TOKEN = "USER_TOKEN";
+
 
         private static final String SQL_CREATE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         TablesContract._ID + " INTEGER PRIMARY KEY , " +
-                        COLUMN_USER_ID +  INTEGER_TYPE + COMMA_SEP +
+                        COLUMN_USER_KEY +  TEXT_TYPE + COMMA_SEP +
+                        COLUMN_REQUEST_KEY +  TEXT_TYPE + COMMA_SEP +
+                        COLUMN_USER_NAME +  TEXT_TYPE + COMMA_SEP +
+                        COLUMN_USER_PHONE +  TEXT_TYPE + COMMA_SEP +
+                        COLUMN_USER_TOKEN +  TEXT_TYPE + COMMA_SEP +
                         COLUMN_AREA_ID +  TEXT_TYPE + COMMA_SEP +
                         COLUMN_LOCATION +  TEXT_TYPE + COMMA_SEP +
                         COLUMN_CATEGORY_ID +  TEXT_TYPE + COMMA_SEP +
@@ -207,6 +227,7 @@ public class TablesContract implements BaseColumns {
                         COLUMN_REQUEST_STATUS_ID +  TEXT_TYPE + COMMA_SEP +
                         COLUMN_VOLUNTEER_ID +  INTEGER_TYPE + COMMA_SEP +
                         COLUMN_REMARKS +  TEXT_TYPE+ ")";
+
 
         public static String getSqlCreate() {
             return SQL_CREATE;

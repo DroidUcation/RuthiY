@@ -1,6 +1,8 @@
 package com.ruthiy.care2car.services;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.android.gms.iid.InstanceIDListenerService;
@@ -12,14 +14,16 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
  */
 public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
 
-    @Override
+    private static final String TAG = "MyFirebaseIIDService";
+    public static final String MyPREFERENCES = "MyPrefs" ;
+   /* @Override
     public void onTokenRefresh() {
         // Fetch updated Instance ID token and notify of changes
         Intent intent = new Intent(this, RegistrationIntentService.class);
         startService(intent);
     }
-
-   /* @Override
+*/
+    @Override
     public void onTokenRefresh() {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
@@ -27,5 +31,17 @@ public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
 
         // TODO: Implement this method to send any registration to your app's servers.
         sendRegistrationToServer(refreshedToken);
-    }*/
+    }
+    private void sendRegistrationToServer(String token) {
+        //You can implement this method to store the token on your server
+        //Not required for current project
+        SharedPreferences sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        ;
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString("token", token);
+        editor.commit();
+    }
+
+
+
 }

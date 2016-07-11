@@ -5,12 +5,22 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".activities.MainActivity">
 
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/care2car"
+        />
+
     <com.ruthiy.care2car.utils.views.MyTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/photo"
         android:text="CareToCare "
         android:id="@+id/textView"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:textSize="35dp" />
 
@@ -22,7 +32,7 @@
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
         android:textSize="35dp"
-        android:textColor="#ff16ff01" />
+        android:textColor="#FBC02D" />
 
     <com.ruthiy.care2car.utils.views.MyEditText
         android:layout_width="wrap_content"
@@ -34,7 +44,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:inputType="textPersonName" />
 
     <com.ruthiy.care2car.utils.views.MyEditText
         android:layout_width="wrap_content"
@@ -45,7 +56,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:hint="Phone" />
+        android:hint="Phone"
+        android:inputType="phone" />
 
     <Spinner
         android:id="@+id/sp_area"
@@ -64,7 +76,7 @@
         android:text="Save"
         android:id="@+id/button"
         android:textAllCaps="false"
-        android:background="#009688"
+        android:background="@drawable/mybutton"
         android:layout_below="@+id/sp_area"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp" />

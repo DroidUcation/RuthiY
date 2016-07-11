@@ -8,251 +8,168 @@
     android:paddingRight="16dp"
     tools:context="com.ruthiy.care2car.activities.ViewRequestActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Request Details"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map2"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
         android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center_horizontal" />
-
+        android:layout_height="0dp"
+        android:layout_weight="1.2"
+        tools:context=".activities.ViewRequestActivity"/>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="5dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:text="Small Text"/>
+        android:layout_height="0dp"
+        android:layout_weight="2">
 
-        <TextView android:id="@+id/location"
+        <com.ruthiy.care2car.utils.views.MyTextView
             android:layout_width="wrap_content"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:textSize="15sp"
+            android:id="@+id/tv1"
+            android:layout_marginBottom="10dp"
+            android:textColor="#F9A825"
+            android:layout_centerHorizontal="true"
+            android:gravity="fill_vertical"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:text="Someone needs your help!"/>
+
+        <com.ruthiy.care2car.utils.views.MyTextView
+            android:id="@+id/where"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv1"
+            android:layout_alignParentLeft="true"
+            android:labelFor="@+id/location"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="16dp"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Where: "/>
+
+       <com.ruthiy.care2car.utils.views.MyTextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/where"
+           android:layout_marginBottom="5dp"
+            android:layout_below="@id/tv1"
+           android:textAppearance="?android:attr/textAppearanceMedium"
+            android:hint="Item Name"/>
+
+
+        <com.ruthiy.care2car.utils.views.MyTextView
+            android:id="@+id/help_With"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="16dp"
+            android:textStyle="bold"
+            android:layout_below="@id/location"
+            android:layout_alignParentLeft="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Needs your help With: "/>
+
+        <com.ruthiy.care2car.utils.views.MyTextView
+            android:id="@+id/problemDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/help_With"
+            android:inputType="textMultiLine"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:hint="Item Name"/>
+
+        <com.ruthiy.care2car.utils.views.MyTextView
+            android:id="@+id/contact_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="16dp"
+            android:layout_below="@id/problemDescription"
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Contact Details: "/>
+
+        <com.ruthiy.care2car.utils.views.MyTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contact_details"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="16dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Name: "/>
+
+        <com.ruthiy.care2car.utils.views.MyTextView
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/name"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@id/contact_details"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:hint="Phone"/>
+
+        <com.ruthiy.care2car.utils.views.MyButton
+            android:id="@+id/bn_acceptRequset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:layout_marginBottom="9dp"
+            android:background="@drawable/mybutton"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text=" I am on my way " />
+
+        <com.ruthiy.care2car.utils.views.MyButton
+            android:id="@+id/bn_declineRequset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:layout_marginBottom="9dp"
+            android:background="@drawable/mybutton"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:textColor="@color/black_87pc"
-            android:text="Smalsfdsdfsdl Text"
-            />
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="5dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:text="Small Text"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=" Cann't help now " />
 
-        <TextView android:id="@+id/tv_area"
+        <com.ruthiy.care2car.utils.views.MyButton
+            android:id="@+id/bn_navigate"
             android:layout_width="wrap_content"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:textSize="15sp"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:layout_marginBottom="9dp"
+            android:background="@drawable/mybutton"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Navigate"
+            android:visibility="invisible" />
+
+        <com.ruthiy.care2car.utils.views.MyButton
+            android:id="@+id/bn_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:layout_marginBottom="9dp"
+            android:background="@drawable/mybutton"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:textColor="@color/black_87pc"
-            android:text="Smalsfdsdfsdl Text"
-            />
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="5dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:text="Small Text"/>
-
-        <TextView android:id="@+id/tv_category"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:textSize="15sp"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/black_87pc"
-            android:text="Smalsfdsdfsdl Text"
-            />
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="5dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:text="Small Text"/>
-
-        <TextView android:id="@+id/tv_engineValume"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:textSize="15sp"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/black_87pc"
-            android:text="Smalsfdsdfsdl Text"
-            />
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="5dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:text="Small Text"/>
-
-        <TextView android:id="@+id/tv_type"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:textSize="15sp"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/black_87pc"
-            android:text="Smalsfdsdfsdl Text"
-            />
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="5dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:text="Small Text"/>
-
-        <TextView android:id="@+id/tv_remarks"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:textSize="15sp"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/black_87pc"
-            android:text="Smalsfdsdfsdl Text"
-            />
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="5dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:text="Small Text"/>
-
-        <TextView android:id="@+id/tv_openDate"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:textSize="15sp"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/black_87pc"
-            android:text="Smalsfdsdfsdl Text"
-            />
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="5dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:text="Small Text"/>
-
-        <TextView android:id="@+id/tv_status"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:textSize="15sp"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/black_87pc"
-            android:text="Smalsfdsdfsdl Text"
-            />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:layout_gravity="bottom"
-        android:padding="5dp">
-
-        <Button
-            android:id="@+id/bn_closeRequest"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="@string/accept"
-            android:layout_alignParentLeft="true"/>
-
-        <Button
-            android:id="@+id/bn_handleRequest"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="@string/accept"
-            android:layout_alignParentRight="true"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=" Call to "
+            android:visibility="invisible" />
 
     </RelativeLayout>
-
 
 
 </LinearLayout>

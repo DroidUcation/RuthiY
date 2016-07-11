@@ -1,4 +1,4 @@
-package com.ruthiy.care2car.services;
+package com.ruthiy.care2car.utils;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -25,14 +25,7 @@ import android.widget.Toast;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 
 import com.ruthiy.care2car.R;

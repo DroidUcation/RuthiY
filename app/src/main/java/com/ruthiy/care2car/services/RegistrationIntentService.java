@@ -45,7 +45,7 @@ public class RegistrationIntentService extends IntentService {
         if (user!=null) {
             currentUser = mGson.fromJson(user, User.class);
             areaId =  currentUser.getAreaId().toString();
-            FirebaseMessaging.getInstance().subscribeToTopic("/topics/" + Config.FIREBASE_REQUESTS_AREA_URL + areaId);
+            FirebaseMessaging.getInstance().subscribeToTopic(areaId);
         }
 
         // Make a call to Instance API

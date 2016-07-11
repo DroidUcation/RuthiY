@@ -1,6 +1,7 @@
 package com.ruthiy.care2car.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -9,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -30,6 +32,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,8 +51,10 @@ import com.google.gson.Gson;
 import com.ruthiy.care2car.R;
 import com.ruthiy.care2car.activities.fragments.GmapFragment;
 import com.ruthiy.care2car.entities.User;
+import com.ruthiy.care2car.http.PostExample;
+import com.ruthiy.care2car.services.Download;
 import com.ruthiy.care2car.services.GPSTracker;
-import com.ruthiy.care2car.services.RegistrationIntentService;
+import com.ruthiy.care2car.tables.TablesContract;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     Location mLastLocation;
     TextView currentLocation;
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static final String Name = "nameKey";
     SharedPreferences sharedpreferences;
@@ -77,11 +81,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     // GPSTracker class
     GPSTracker gps;
 
-    @Override
-    protected void onResume() {
-//        getCurrentLocation();
-        super.onResume();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,49 +91,40 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         buildGoogleApiClient();
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        sharedpreferences.edit().clear();
-        sharedpreferences.edit().commit();
         String user = sharedpreferences.getString(Name, null);
-        if (user == null) {
-            Intent intent = new Intent(MainActivity.this, LoginPageActivity.class);
-            startActivity(intent);
-        } else {
-            try {
-                currentUser = mGson.fromJson(user, User.class);
-                //Toast.makeText(MainActivity.this, currentUser.getName() + " Already logged", Toast.LENGTH_LONG).show();
-            } catch (Exception e) {
-                changeContactDetailsDialog();
+        currentUser = mGson.fromJson(user, User.class);
+
+        /*ImageButton findLoc = (ImageButton)  findViewById(R.id.ib_findLocation);
+        findLoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getLocation();
             }
-            Button button = (Button) findViewById(R.id.bn_ask4help);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(MainActivity.this, OpenRequest.class);
-                    currentUser.setLocation(mLastLocation);
-                    ArrayList<User> list = new ArrayList<User>();
-                    list.add(currentUser);
-                    intent.putParcelableArrayListExtra("user", list);
-                    intent.putExtra("area", city);
-                    intent.putExtra("address", address);
-                    if (intent != null) startActivity(intent);
-                }
-            });
+        });
+*/
+        Button button = (Button) findViewById(R.id.bn_ask4help);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, OpenRequest.class);
+                currentUser.setLocation(mLastLocation);
+                ArrayList<User> list = new ArrayList<User>();
+                list.add(currentUser);
+                intent.putParcelableArrayListExtra("user", list);
+                intent.putExtra("area", city);
+                intent.putExtra("address", address);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                new Download().execute("https://fcm.googleapis.com/fcm/send");
+                if (intent != null) startActivity(intent);
+            }
+        });
 
-            currentLocation = (TextView) findViewById(R.id.tv_currentLocation);
-            // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
+        currentLocation = (TextView) findViewById(R.id.tv_currentLocation);
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
-
-
-           /* if (checkPlayServices()) {
-                Intent intent = new Intent(this, RegistrationIntentService.class);
-                startService(intent);
-            }*/
-
-
-        }
     }
 
     private void getAddressByLocation() {
@@ -157,29 +147,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             e.printStackTrace();
         }
     }
-
-    //notification fire base
-    /**
-     * Check the device to make sure it has the Google Play Services APK. If
-     * it doesn't, display a dialog that allows users to download the APK from
-     * the Google Play Store or enable it in the device's system settings.
-     */
-    private boolean checkPlayServices() {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
-                        .show();
-            } else {
-                Log.i("MainActiviy", "This device is not supported.");
-                finish();
-            }
-            return false;
-        }
-        return true;
-    }
-    ///////************************************/////////////
     public void changeContactDetailsDialog(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage("Would you like to change your contact details? ");
@@ -219,7 +186,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onStart() {
-        super.onStart();
+        super.onStart();/*
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.mipmap.care2car);*/
         mGoogleApiClient.connect();
     }
 
@@ -232,13 +201,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onConnected(Bundle bundle) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            mGoogleApiClient.disconnect();
             requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION);
         } else {
-            GetLocation();
+            getLocation();
         }
     }
 
-    private void GetLocation() {
+    private void getLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_DENIED) {
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (mLastLocation != null) {
@@ -255,8 +225,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 try {
                     addresses = geocoder.getFromLocation(mLastLocation.getLatitude(),  mLastLocation.getLongitude(), 1);
                     if (addresses.size() > 0) {
-                         address = addresses.get(0).getAddressLine(0);
-                         city = addresses.get(0).getLocality();
+                        address = addresses.get(0).getAddressLine(0);
+                        city = addresses.get(0).getLocality();
                         String state = addresses.get(0).getAdminArea();
                         String country = addresses.get(0).getCountryName();
                         String postalCode = addresses.get(0).getPostalCode();
@@ -277,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Marker m = mMap.addMarker(new MarkerOptions().position(loc).title(title));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 16));
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 16));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
+        //mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
         return m;
     }
 
@@ -291,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch (requestCode) {
             case LOCATION_PERMISSION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    GetLocation();
+                    getLocation();
                 } else {
                     SetDefaultLocation();
                 }
@@ -335,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS),1);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -346,32 +316,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         final AlertDialog alert = builder.create();
         alert.show();
     }
-    private void turnGPSOn()
-    {
-        String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
 
-        if(!provider.contains("gps"))
-        { //if gps is disabled
-            final Intent poke = new Intent();
-            poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
-            poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
-            poke.setData(Uri.parse("3"));
-            sendBroadcast(poke);
-        }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //mGoogleApiClient.connect();
+        getLocation();
     }
 
-    private void turnGPSOff()
-    {
-        String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
 
-        if(provider.contains("gps"))
-        { //if gps is enabled
-            final Intent poke = new Intent();
-            poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
-            poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
-            poke.setData(Uri.parse("3"));
-            sendBroadcast(poke);
-        }
+    public void testContentProvider(){
+        String [] requestedColumns = { TablesContract.Request.COLUMN_CATEGORY_ID,  TablesContract.Request.COLUMN_AREA_ID};
+
+        Integer userId = 3;
+        Cursor requests = getApplicationContext().getContentResolver().query(
+                TablesContract.Request.CONTENT_URI,
+                requestedColumns,
+                TablesContract.Request.COLUMN_USER_NAME + "='" + userId + "'",
+                null, null);
+
+        // A cursor is your primary interface to the query results.
+        Cursor cursor = getApplicationContext().getContentResolver().query(
+                TablesContract.Request.CONTENT_URI,
+                null, // leaving "columns" null just returns all the columns.
+                null, // cols for "where" clause
+                null, // values for "where" clause
+                null  // sort order
+        );
     }
 
 }
