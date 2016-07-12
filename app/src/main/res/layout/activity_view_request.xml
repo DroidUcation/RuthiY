@@ -23,7 +23,7 @@
         android:layout_height="0dp"
         android:layout_weight="2">
 
-        <com.ruthiy.care2car.utils.views.MyTextView
+        <com.ruthiy.care2car.utils.views.MyTextViewBold
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv1"
@@ -35,7 +35,7 @@
             android:textStyle="bold"
             android:text="Someone needs your help!"/>
 
-        <com.ruthiy.care2car.utils.views.MyTextView
+        <com.ruthiy.care2car.utils.views.MyTextViewBold
             android:id="@+id/where"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,21 +45,28 @@
             android:layout_marginBottom="5dp"
             android:layout_marginRight="16dp"
             android:textStyle="bold"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Where: "/>
 
        <com.ruthiy.care2car.utils.views.MyTextView
             android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/where"
-           android:layout_marginBottom="5dp"
-            android:layout_below="@id/tv1"
-           android:textAppearance="?android:attr/textAppearanceMedium"
-            android:hint="Item Name"/>
+           android:layout_marginBottom="10dp"
+           android:textAppearance="?android:attr/textAppearanceSmall"
+            android:hint="Item Name"
+           android:layout_below="@id/where"
+           android:layout_alignParentLeft="true" />
 
+        <View
+            android:layout_below="@id/location"
+            android:background="#9E9E9E"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="16dp"
+            android:layout_height="1dp"
+            />
 
-        <com.ruthiy.care2car.utils.views.MyTextView
+        <com.ruthiy.care2car.utils.views.MyTextViewBold
             android:id="@+id/help_With"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -68,21 +75,28 @@
             android:textStyle="bold"
             android:layout_below="@id/location"
             android:layout_alignParentLeft="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Needs your help With: "/>
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Problem Description: "/>
 
         <com.ruthiy.care2car.utils.views.MyTextView
             android:id="@+id/problemDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="10dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/help_With"
             android:inputType="textMultiLine"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:hint="Item Name"/>
+        <View
+            android:background="#9E9E9E"
+            android:layout_below="@id/problemDescription"
+            android:layout_marginBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            />
 
-        <com.ruthiy.care2car.utils.views.MyTextView
+        <com.ruthiy.care2car.utils.views.MyTextViewBold
             android:id="@+id/contact_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -91,33 +105,59 @@
             android:layout_below="@id/problemDescription"
             android:textStyle="bold"
             android:layout_alignParentLeft="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Contact Details: "/>
 
-        <com.ruthiy.care2car.utils.views.MyTextView
-            android:id="@+id/name"
+        <com.ruthiy.care2car.utils.views.MyTextViewBold
+            android:id="@+id/nameTittle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/contact_details"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="5dp"
-            android:layout_marginRight="16dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginRight="7dp"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Name: "/>
+
+        <com.ruthiy.care2car.utils.views.MyTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@id/nameTittle"
+            android:layout_below="@id/contact_details"
+            android:inputType="textMultiLine"
+            android:layout_marginRight="12dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:hint="Item Name"/>
+
+        <com.ruthiy.care2car.utils.views.MyTextViewBold
+            android:id="@+id/phoneLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@id/name"
+            android:layout_below="@id/contact_details"
+            android:layout_marginRight="7dp"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:hint="Phone:"/>
 
         <com.ruthiy.care2car.utils.views.MyTextView
             android:id="@+id/phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/name"
             android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@id/phoneLabel"
             android:layout_below="@id/contact_details"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:hint="Phone"/>
+            android:inputType="textMultiLine"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:hint="Item Name"/>
 
         <com.ruthiy.care2car.utils.views.MyButton
             android:id="@+id/bn_acceptRequset"
-            android:layout_width="wrap_content"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:gravity="center"
@@ -125,12 +165,12 @@
             android:background="@drawable/mybutton"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text=" I am on my way " />
 
         <com.ruthiy.care2car.utils.views.MyButton
             android:id="@+id/bn_declineRequset"
-            android:layout_width="wrap_content"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:gravity="center"
@@ -143,7 +183,7 @@
 
         <com.ruthiy.care2car.utils.views.MyButton
             android:id="@+id/bn_navigate"
-            android:layout_width="wrap_content"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:gravity="center"
@@ -157,7 +197,7 @@
 
         <com.ruthiy.care2car.utils.views.MyButton
             android:id="@+id/bn_call"
-            android:layout_width="wrap_content"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:gravity="center"
@@ -166,7 +206,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text=" Call to "
+            android:text=" Call "
             android:visibility="invisible" />
 
     </RelativeLayout>

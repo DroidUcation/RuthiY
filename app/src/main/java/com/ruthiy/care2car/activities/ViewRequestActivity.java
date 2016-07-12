@@ -1,16 +1,24 @@
 package com.ruthiy.care2car.activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
@@ -27,13 +35,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.ruthiy.care2car.R;
 import com.ruthiy.care2car.entities.Request;
 import com.ruthiy.care2car.entities.User;
+import com.ruthiy.care2car.services.SendMessages;
 import com.ruthiy.care2car.utils.Config;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -52,6 +63,8 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
     private static final int LOCATION_PERMISSION = 583;
     Marker fromMarker = null;
     Marker userMarker = null;
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    SharedPreferences sharedpreferences;
 
     Location mLastLocation;
 
@@ -60,6 +73,7 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_request);
         buildGoogleApiClient();
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         Bundle  b = this.getIntent().getExtras();
 
          tvlocation = (TextView) findViewById(R.id.location);
@@ -83,8 +97,68 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
                 userLocation = userLocations;
             }
         }
-    }
+        final Button bnCall = (Button) findViewById(R.id.bn_call);
+        final Button bnNavigate = (Button) findViewById(R.id.bn_navigate);
 
+
+        final Button declineRequset = (Button) findViewById(R.id.bn_declineRequset);
+        declineRequset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                confirmCancelRequestDialog();;
+                }
+        });
+
+        final Button acceptRequset = (Button) findViewById(R.id.bn_acceptRequset);
+        acceptRequset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bnCall.setVisibility(View.VISIBLE);
+                bnNavigate.setVisibility(View.VISIBLE);
+                declineRequset.setVisibility(View.INVISIBLE);
+                acceptRequset.setVisibility(View.VISIBLE);
+                String userKey = sharedpreferences.getString("key", null);
+                new SendMessages().execute("https://fcm.googleapis.com/fcm/send", requestFB.getUserToken(), userKey, "true");
+            }
+        });
+
+        bnCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String phoneNumber = tvphone.getText().toString();
+                Intent dialIntent= new Intent(Intent.ACTION_DIAL);
+                dialIntent.setData(Uri.parse("tel:"+ phoneNumber));
+                if (dialIntent != null) startActivity(dialIntent);
+            }
+        });
+
+        bnNavigate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String phoneNumber = tvphone.getText().toString();
+                Intent in=new Intent(Intent.ACTION_CALL, Uri.parse(phoneNumber));
+                if (in != null) startActivity(in);
+            }
+        });
+
+    }
+    public void confirmCancelRequestDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+       /* new AlertDialog.Builder(this).setTitle("Argh").setMessage("Watch out!").setIcon(R.drawable.icon).setNeutralButton("Close", null).show();
+        */
+
+        alertDialogBuilder.setTitle("  Care2Car");
+        alertDialogBuilder.setMessage("Thanks! maybe next time :) ");
+        alertDialogBuilder.setNeutralButton("Ok",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
     public void getRequestFromFireBase(String requestKey){
         Firebase.setAndroidContext(this);
         Firebase ref = new Firebase(Config.FIREBASE_REQUESTS_URL);
@@ -93,6 +167,11 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
             public void onDataChange(DataSnapshot snapshot) {
                 System.out.println("There are " + snapshot.getChildrenCount() + " blog posts");
                 requestFB = snapshot.getValue(Request.class);
+                tvlocation = (TextView) findViewById(R.id.location);
+                tvProblemDescription = (TextView) findViewById(R.id.problemDescription);
+                tvName = (TextView) findViewById(R.id.name);
+                tvphone = (TextView) findViewById(R.id.phone);
+
                 tvName.setText(requestFB.getUserName());
                 tvphone.setText(requestFB.getUserPhone());
                 String ProblemDescription = requestFB.getCategoryId();
@@ -139,12 +218,12 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     public void onConnected(Bundle bundle) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            mGoogleApiClient.disconnect();
-            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION);
-        } else {
+       // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+          //  mGoogleApiClient.disconnect();
+           // requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION);
+       // } else {
             getLocation();
-        }
+       // }
     }
 
     private void getLocation() {

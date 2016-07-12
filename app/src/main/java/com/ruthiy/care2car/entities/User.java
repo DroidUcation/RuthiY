@@ -32,6 +32,7 @@ public class User implements Parcelable /*extends SugarRecord*/{
         phoneNumber = in.readString();
         password = in.readString();
         areaId = in.readString();
+        userToken = in.readString();
         location = in.readParcelable(Location.class.getClassLoader());
     }
 
@@ -110,6 +111,7 @@ public class User implements Parcelable /*extends SugarRecord*/{
         dest.writeString(userKey);
         dest.writeString(name);
         dest.writeString(phoneNumber);
+        dest.writeString(userToken);
         dest.writeString(password);
         dest.writeString(areaId);
         dest.writeParcelable(location, flags);

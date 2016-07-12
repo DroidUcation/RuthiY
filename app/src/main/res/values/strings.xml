@@ -44,17 +44,17 @@
         <item>Engine Overheating</item>
         <item>Electrical Issues</item>
         <item>Puncture a tire</item>
-        <item><![CDATA[Engine Won\'\t Start, No Fuel]]></item>
-        <item><![CDATA[Engine Won\'\t Start, No Spark]]></item>
+        <item><![CDATA[Engine Won\'t Start, No Fuel]]></item>
+        <item><![CDATA[Engine Won\'t Start, No Spark]]></item>
         <item>Other</item>
-        <item>--What is the problem ? --</item>
+        <item>--What is your problem ? --</item>
     </string-array>
 
     <string-array name="type">
         <item>Manullay Gear</item>
         <item>Automathic Gear</item>
         <item>Other</item>
-        <item>--Choose car type ? --</item>
+        <item>--Choose your car type ? --</item>
     </string-array>
 
     <string-array name="area">

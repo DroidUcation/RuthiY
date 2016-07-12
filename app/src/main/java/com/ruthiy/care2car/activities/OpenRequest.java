@@ -8,37 +8,29 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
-import com.google.android.gms.common.api.Result;
-import com.google.android.gms.nearby.messages.Message;
 import com.google.gson.Gson;
 import com.ruthiy.care2car.R;
 import com.ruthiy.care2car.entities.Request;
 import com.ruthiy.care2car.entities.User;
+import com.ruthiy.care2car.services.SendMessages;
 import com.ruthiy.care2car.tables.TablesContract;
 import com.ruthiy.care2car.utils.Config;
 import com.ruthiy.care2car.utils.views.MySpinnerAdapter;
@@ -63,6 +55,9 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
     String area;
     String userAddress;
     Location userLocation;
+    TextView location ;
+    EditText userName;
+    EditText phone;
 
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static final String Name = "nameKey";
@@ -76,16 +71,13 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_open_request);
-        TextView location = (TextView) findViewById(R.id.location);
-        EditText userName = (EditText) findViewById(R.id.et_user_name);
-        EditText phone = (EditText) findViewById(R.id.et_user_phone);
-
         setupSpinnerAdapter(R.id.spinner_category, R.array.category, null);
         setupSpinnerAdapter(R.id.spinner_engineValume, R.array.engineValume, null);
         setupSpinnerAdapter(R.id.spinner_type, R.array.type, null);
+        getUserDetailsFromFireBase();
         Bundle  b = this.getIntent().getExtras();
 
-        if (b.containsKey("user")) {
+        /*if (b.containsKey("user")) {
             ArrayList<User> users = getIntent().getParcelableArrayListExtra("user");
             for(User userDetails : users) {
                 Log.i("", userDetails.getName());
@@ -94,9 +86,9 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
             userName.setText(currentUser.getName());
             userLocation = currentUser.getLocation();
             phone.setText(currentUser.getPhoneNumber());
-            getUserDetailsFromFireBase();
+        }*/
 
-        }
+        TextView location = (TextView) findViewById(R.id.location);
         if (b.containsKey("address")) {
             userAddress = b.getString("address");
             location.setText(userAddress!=null? userAddress : "Uknown Address");
@@ -118,6 +110,7 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
                 java.util.Date date= new java.util.Date();
                 request.setRequestStDate(new Timestamp(date.getTime()));
                 request.setUserPhone(currentUser.getPhoneNumber());
+                request.setUserName(currentUser.getName());
                 if(checkMandatoryFileds(request)) {
                     Long requestId = saveRequestOnLocalDB(request);
                     saveRequestOnFireBase(requestId);
@@ -125,11 +118,11 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
                     ArrayList<Location> list = new ArrayList<Location>();
                     list.add(userLocation);
                     intent.putParcelableArrayListExtra("userLocation", list);
-                    //confirmOpenRequestDialog();
-
-                    intent.putExtra("request", request.getRequestKey());
+                    confirmOpenRequestDialog();
+                   new SendMessages().execute("https://fcm.googleapis.com/fcm/send", currentUser.getAreaId(), request.getRequestKey(), "false");
+                    /*intent.putExtra("request", request.getRequestKey());
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    if (intent != null) startActivity(intent);
+                    if (intent != null) startActivity(intent);*/
                 }
 
             }
@@ -208,10 +201,20 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
         String userKey = sharedpreferences.getString("key", null);
         return userKey;
     }
+
+    public String getUserTokenFromSP(){
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        String userToken = sharedpreferences.getString("token", null);
+        return userToken;
+    }
     public void saveRequestOnFireBase(Long requestId){
         Firebase.setAndroidContext(this);
         Firebase ref = new Firebase(Config.FIREBASE_REQUESTS_URL);
         //Storing values to firebase
+        String userToken = sharedpreferences.getString("token", null);
+        if (userToken != null) {
+            request.setUserToken(userToken);
+        }
         ref = ref.push();
         ref.setValue(request);
         String requestKey = ref.getKey();
@@ -265,13 +268,19 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
             public void onDataChange(DataSnapshot snapshot) {
                 System.out.println("There are " + snapshot.getChildrenCount() + " blog posts");
                 userFB = snapshot.getValue(User.class);
-                if(userFB!= null) {
-                    Toast.makeText(getBaseContext(), "Hello " + userFB.getName(), Toast.LENGTH_LONG).show();
-                }
+                if (userFB != null) {
+                   /* Toast.makeText(getBaseContext(), "Hello " + userFB.getName(), Toast.LENGTH_LONG).show();
+                   */ currentUser = userFB;
+                    EditText userName = (EditText) findViewById(R.id.et_user_name);
+                    EditText phone = (EditText) findViewById(R.id.et_user_phone);
+                    userName.setText(currentUser.getName());
+                    userLocation = currentUser.getLocation();
+                    phone.setText(currentUser.getPhoneNumber());
                 /*for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     BlogPost post = postSnapshot.getValue(BlogPost.class);
                     System.out.println(post.getAuthor() + " - " + post.getTitle());
                 }*/
+                }
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {
@@ -279,7 +288,7 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
         });
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
+    /*@TargetApi(Build.VERSION_CODES.KITKAT)
     private static void sendFCMtoTopics(){
         try {
             HttpURLConnection httpcon = (HttpURLConnection) ((new URL("https://fcm.googleapis.com/fcm/send").openConnection()));
@@ -308,11 +317,15 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public void confirmOpenRequestDialog(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+       /* new AlertDialog.Builder(this).setTitle("Argh").setMessage("Watch out!").setIcon(R.drawable.icon).setNeutralButton("Close", null).show();
+        */
+
         alertDialogBuilder.setIcon(R.drawable.confirm);
+        alertDialogBuilder.setTitle("  Care2Car");
         alertDialogBuilder.setMessage("Your request send successfully ");
         alertDialogBuilder.setNeutralButton("Ok",new DialogInterface.OnClickListener() {
             @Override

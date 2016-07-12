@@ -3,11 +3,6 @@ package com.ruthiy.care2car.http;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,15 +12,13 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import okhttp3.Callback;
 import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
-public class PostExample {
+public class PostHttpRequest {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
 
@@ -44,47 +37,17 @@ public class PostExample {
         return call;
     }
 
-    /*post("http://www.roundsapp.com/post", "",new Callback(){
-        @Override
-        public void onFailure(Call call, IOException e) {
-            // Something went wrong
-        }
-
-        @Override
-        public void onResponse(Call call, Response response) throws IOException {
-            if (response.isSuccessful()) {
-                String responseStr = response.body().string();
-                // Do what you want to do with the response.
-            } else {
-                // Request not successful
-            }
-        }
-    });*/
-
-    /*@TargetApi(Build.VERSION_CODES.KITKAT)
-    public String post(String url, String json) throws IOException {
-        RequestBody body = RequestBody.create(JSON, bowlingJson());
-        Request request = new Request.Builder()
-                .url(url).header("Authorization", "key=AIzaSyDk4Vgg0xNXMJasOiz3ofBvoDbdwpmGYDE")
-                .addHeader("Content-Type","application/json")
-                .post(body)
-                .build();
-        try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
-        }
-    }*/
-
-    public static String bowlingJson() {
-        return "{"
-                + "'to': ['/topics/Afula'],"
-                + "'data': {"
-                + " 'message': 'This is a Firebase Cloud Messaging Topic Message!'"
-                + "}"
-                + "  }";
+    public static String bowlingJson(String topic, String token, String message) {
+        String to = topic!= null ? "/topics/" + topic : "/" + token;
+        return
+                "{\"to\":\"" + to + "\","
+                        + " \"data\": {"
+                        + "\"message\": \""+message+"\""
+                        +"}}";
     }
 
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
+    /*@TargetApi(Build.VERSION_CODES.KITKAT)
     private static void sendFCMtoTopics(){
         try {
             HttpURLConnection httpcon = (HttpURLConnection) ((new URL("https://fcm.googleapis.com/fcm/send").openConnection()));
@@ -114,7 +77,7 @@ public class PostExample {
             e.printStackTrace();
         }
     }
-
+*/
    /* private void sendPost() throws Exception {
 
         //Below is a good tutorial , how to post json data
@@ -160,8 +123,8 @@ public class PostExample {
     }*/
 
     public static void main(String[] args) throws IOException {
-        PostExample example = new PostExample();
-        sendFCMtoTopics();
+        PostHttpRequest example = new PostHttpRequest();
+      //  sendFCMtoTopics();
         /*String json = example.bowlingJson("Jesse", "Jake");
         String response = example.post("https://fcm.googleapis.com/fcm/send", json);*/
        /* System.out.println(response);*/

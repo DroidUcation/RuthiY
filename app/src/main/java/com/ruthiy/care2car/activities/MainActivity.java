@@ -1,10 +1,7 @@
 package com.ruthiy.care2car.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,30 +11,17 @@ import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,10 +33,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.ruthiy.care2car.R;
-import com.ruthiy.care2car.activities.fragments.GmapFragment;
 import com.ruthiy.care2car.entities.User;
-import com.ruthiy.care2car.http.PostExample;
-import com.ruthiy.care2car.services.Download;
 import com.ruthiy.care2car.services.GPSTracker;
 import com.ruthiy.care2car.tables.TablesContract;
 
@@ -112,9 +93,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 list.add(currentUser);
                 intent.putParcelableArrayListExtra("user", list);
                 intent.putExtra("area", city);
-                intent.putExtra("address", address);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                new Download().execute("https://fcm.googleapis.com/fcm/send");
+                intent.putExtra("address",address + ", " + city);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 if (intent != null) startActivity(intent);
             }
         });
@@ -141,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String country = addresses.get(0).getCountryName();
                 String postalCode = addresses.get(0).getPostalCode();
                 String knownName = addresses.get(0).getFeatureName();
-                currentLocation.setText(address);
+                currentLocation.setText(address + ", " + city );
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -231,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         String country = addresses.get(0).getCountryName();
                         String postalCode = addresses.get(0).getPostalCode();
                         String knownName = addresses.get(0).getFeatureName();
-                        currentLocation.setText(address);
+                        currentLocation.setText(address + ", " + city);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

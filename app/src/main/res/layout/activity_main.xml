@@ -10,14 +10,15 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+      >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#009688"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:layout_gravity="center" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -40,6 +41,7 @@
             android:layout_gravity="left"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
             android:text="Your current Location is: "/>
         <com.ruthiy.care2car.utils.views.MyTextView
             android:id="@+id/tv_currentLocation"
@@ -48,6 +50,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
             android:layout_below="@id/tv_label"
             android:text="Unknown Address"/>
         <com.ruthiy.care2car.utils.views.MyButton

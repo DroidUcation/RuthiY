@@ -10,6 +10,7 @@
         android:layout_width="200dp"
         android:layout_height="100dp"
         android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:src="@mipmap/care2car"
@@ -80,5 +81,18 @@
         android:layout_below="@+id/sp_area"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_below="@+id/sp_area"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_alignRight="@+id/textView2"
+        android:layout_alignEnd="@+id/textView2"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:indeterminate="true"
+        android:visibility="invisible" />
 
 </RelativeLayout>

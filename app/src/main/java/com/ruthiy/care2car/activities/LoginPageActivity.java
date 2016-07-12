@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -24,6 +25,10 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.ruthiy.care2car.R;
 import com.ruthiy.care2car.entities.Request;
@@ -83,18 +88,24 @@ public class LoginPageActivity extends AppCompatActivity {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                b1.setEnabled(false);
+
+                ed1.setVisibility(View.INVISIBLE);
+                ed2.setVisibility(View.INVISIBLE);
+                sp1.setVisibility(View.INVISIBLE);
+                b1.setVisibility(View.INVISIBLE);
                 user = new User();
 
                 String n  = ed1.getText().toString();
                 String ph  = ed2.getText().toString();
                 String e  = sp1.getSelectedItem().toString();
-
+                ProgressBar progressBar =(ProgressBar) findViewById(R.id.progressBar);
+                progressBar.setVisibility(View.VISIBLE);
                 user.setName(n);
                 user.setPhoneNumber(ph);
                 user.setAreaId(e);
 
                 SharedPreferences.Editor editor = sharedpreferences.edit();
+
                 userId = saveUserOnLocalDB(user);
                 String gsonString = mGson.toJson(user);
                 editor.putString(Name, gsonString);
@@ -140,6 +151,9 @@ public class LoginPageActivity extends AppCompatActivity {
     }
 
     public void saveUserOnFireBase(Long userId){
+        DatabaseReference mDatabase;
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
         Firebase.setAndroidContext(this);
         Firebase ref = new Firebase(Config.FIREBASE_USER_URL);
         //Storing values to firebase
