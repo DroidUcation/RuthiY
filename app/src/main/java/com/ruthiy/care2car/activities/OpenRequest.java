@@ -1,16 +1,12 @@
 package com.ruthiy.care2car.activities;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,9 +14,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -31,18 +28,12 @@ import com.ruthiy.care2car.R;
 import com.ruthiy.care2car.entities.Request;
 import com.ruthiy.care2car.entities.User;
 import com.ruthiy.care2car.services.SendMessages;
+import com.ruthiy.care2car.utils.sharedPreferencesUtil;
 import com.ruthiy.care2car.tables.TablesContract;
 import com.ruthiy.care2car.utils.Config;
 import com.ruthiy.care2car.utils.views.MySpinnerAdapter;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.Serializable;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,13 +46,12 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
     String area;
     String userAddress;
     Location userLocation;
-    TextView location ;
-    EditText userName;
-    EditText phone;
+    Button button;
+    ProgressBar progressBar;
 
-    public static final String MyPREFERENCES = "MyPrefs" ;
-    public static final String Name = "nameKey";
-    SharedPreferences sharedpreferences;
+    double latitude ;
+    double longitude ;
+
     Gson mGson = new Gson();
    /* public Typeface font = Typeface.createFromAsset(getAssets(),
             "fonts/openSans/OpenSans-Light.ttf");*/
@@ -70,10 +60,12 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_open_request);
+       setContentView(R.layout.activity_open_request);
         setupSpinnerAdapter(R.id.spinner_category, R.array.category, null);
         setupSpinnerAdapter(R.id.spinner_type, R.array.type, null);
-        getUserDetailsFromFireBase();
+        if (getUserDetailsFromFireBase()){
+            Log.d("openedRequest" , " --> User is downloaded");
+        }
         Bundle  b = this.getIntent().getExtras();
 
         /*if (b.containsKey("user")) {
@@ -97,12 +89,22 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
             area = b.getString("area");
         }
 
-        Button button = (Button) findViewById(R.id.bn_openRequset);
+        if (b.containsKey("longitude")) {
+            longitude = b.getDouble("longitude");
+
+        }
+        if (b.containsKey("latitude")) {
+            latitude = b.getDouble("latitude");
+        }
+
+        button = (Button) findViewById(R.id.bn_openRequset);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 request.setRequestStatusId("Active");
                 request.setLocation(userAddress); //currentUser.getLocation()
+                request.setLongitude(longitude);
+                request.setLatitude(latitude);
                 TextView textView = (TextView) findViewById(R.id.et_remarks);
                 request.setRemarks(textView.getText().toString());
                 request.setRequestEndDate(null);
@@ -193,22 +195,12 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
         int ur2i = getContentResolver().update(TablesContract.Request.CONTENT_URI.buildUpon().appendPath(requestId.toString()).build(), initialValues, null,null );
     }
 
-    public String getUserKeyFromSP(){
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        String userKey = sharedpreferences.getString("key", null);
-        return userKey;
-    }
 
-    public String getUserTokenFromSP(){
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        String userToken = sharedpreferences.getString("token", null);
-        return userToken;
-    }
     public void saveRequestOnFireBase(Long requestId){
         Firebase.setAndroidContext(this);
         Firebase ref = new Firebase(Config.FIREBASE_REQUESTS_URL);
         //Storing values to firebase
-        String userToken = sharedpreferences.getString("token", null);
+        String userToken = sharedPreferencesUtil.getUserTokenFromSP(this);
         if (userToken != null) {
             request.setUserToken(userToken);
         }
@@ -218,7 +210,7 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
         request.setRequestKey(ref.getKey());
         Log.d("TSG", "saveRequestOnFireBase: "+requestKey);
 
-        Firebase fbUsers = new Firebase(Config.FIREBASE_REQUESTS_USER_URL + getUserKeyFromSP());
+        Firebase fbUsers = new Firebase(Config.FIREBASE_REQUESTS_USER_URL + sharedPreferencesUtil.getUserKeyFromSP(this));
         //Storing values to firebase
         fbUsers = fbUsers.push();
         fbUsers.setValue(request);
@@ -257,10 +249,10 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
 
     }*/
 
-    public void getUserDetailsFromFireBase(){
+    public boolean getUserDetailsFromFireBase(){
         Firebase.setAndroidContext(this);
         Firebase ref = new Firebase(Config.FIREBASE_USER_URL);
-        ref.child(getUserKeyFromSP()).addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.child(sharedPreferencesUtil.getUserKeyFromSP(this)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 System.out.println("There are " + snapshot.getChildrenCount() + " blog posts");
@@ -273,6 +265,9 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
                     userName.setText(currentUser.getName());
                     userLocation = currentUser.getLocation();
                     phone.setText(currentUser.getPhoneNumber());
+                    button.setVisibility(View.VISIBLE);
+                    progressBar = (ProgressBar) findViewById(R.id.progressBar2);
+                    progressBar.setVisibility(View.INVISIBLE);
                 /*for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     BlogPost post = postSnapshot.getValue(BlogPost.class);
                     System.out.println(post.getAuthor() + " - " + post.getTitle());
@@ -283,6 +278,7 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
             public void onCancelled(FirebaseError firebaseError) {
             }
         });
+        return (userFB != null);
     }
 
     /*@TargetApi(Build.VERSION_CODES.KITKAT)

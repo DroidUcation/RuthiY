@@ -44,8 +44,6 @@ public class LoginPageActivity extends AppCompatActivity {
     Button b1;
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static final String Name = "nameKey";
-    public static final String Phone = "phoneKey";
-    public static final String Email = "emailKey";
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     SharedPreferences sharedpreferences;

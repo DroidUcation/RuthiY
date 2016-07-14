@@ -31,6 +31,7 @@
     <string name="bn_showMyVolunteering">Show My Volunteering</string>
     <string name="fine">fine</string>
     <string name="cancel">cancel</string>
+    <string name="contactDetails"><u>Contact Details:</u></string>
 
 
     <string-array name="status">
@@ -54,7 +55,6 @@
         <item>Manullay Gear</item>
         <item>Automathic Gear</item>
         <item>Other</item>
-        <item>--Choose your car type ? --</item>
     </string-array>
 
     <string-array name="area">
@@ -67,6 +67,7 @@
         <item>Ashkelon		    </item>
         <item>Bat Yam			</item>
         <item>Beer Sheva		</item>
+        <item>Beer Yaakov		</item>
         <item>Beit Shean		</item>
         <item>Beit Shemesh	    </item>
         <item>Betar Illit		</item>
@@ -118,14 +119,12 @@
         <item>Tsfat (Safed)	</item>
         <item>Yavne			</item>
         <item>Yehud-Monosson   </item>
-        <item>--Where you are now ? --</item>
     </string-array>
 
     <string-array name="engineValume">
         <item>Less then 1000</item>
         <item>Less then 2000</item>
         <item>more than 2000</item>
-        <item>--Which engine you have ? -- </item>
     </string-array>
 
 </resources>

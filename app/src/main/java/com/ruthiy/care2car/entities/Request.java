@@ -22,9 +22,9 @@ public class Request implements Serializable {
     String userName ;
     String userPhone ;
     String userToken ;
-    String areaId ;/*
+    String areaId ;
     double latitude ;
-    double longitude ;*/
+    double longitude ;
     String location ;
     String categoryId ;
     String engineVolumeId ;
@@ -132,13 +132,13 @@ public class Request implements Serializable {
 
     public void setRequestKey(String requestKey) {this.requestKey = requestKey;}
 
-    /*public double getLatitude() { return latitude;}
+    public double getLatitude() { return latitude;}
 
     public void setLatitude(double latitude) { this.latitude = latitude;}
 
     public double getLongitude() {return longitude;}
 
-    public void setLongitude(double longitude) {this.longitude = longitude;}*/
+    public void setLongitude(double longitude) {this.longitude = longitude;}
 
     public static ContentValues getForInsert(Request request){
         ContentValues initialValues = new ContentValues();
@@ -146,6 +146,8 @@ public class Request implements Serializable {
         initialValues.put(TablesContract.Request.COLUMN_AREA_ID, request.getAreaId());
         initialValues.put(TablesContract.Request.COLUMN_CATEGORY_ID, request.getCategoryId());
         initialValues.put(TablesContract.Request.COLUMN_ENGINE_VOLUME_ID, request.getEngineVolumeId());
+        initialValues.put(TablesContract.Request.COLUMN_LOCATION_LATITUDE, request.getLongitude());
+        initialValues.put(TablesContract.Request.COLUMN_LOCATION_LONGITUDE, request.getLatitude());
         initialValues.put(TablesContract.Request.COLUMN_LOCATION, request.getLocation());
         initialValues.put(TablesContract.Request.COLUMN_REMARKS, request.getRemarks());
         initialValues.put(TablesContract.Request.COLUMN_REQUEST_END_DATE,
@@ -168,6 +170,10 @@ public class Request implements Serializable {
         if (cursor != null && cursor.moveToFirst()) {
 
             request.setLocation(cursor.getString(cursor.getColumnIndex(TablesContract.Request.COLUMN_LOCATION)));
+            request.setLongitude(Double.parseDouble(
+                    cursor.getString(cursor.getColumnIndex(TablesContract.Request.COLUMN_LOCATION_LONGITUDE))));
+            request.setLatitude(Double.parseDouble(
+                    cursor.getString(cursor.getColumnIndex(TablesContract.Request.COLUMN_LOCATION_LATITUDE))));
             request.setAreaId(cursor.getString(cursor.getColumnIndex(TablesContract.Request.COLUMN_AREA_ID)));
             request.setCategoryId(cursor.getString(cursor.getColumnIndex(TablesContract.Request.COLUMN_CATEGORY_ID)));
             request.setEngineVolumeId(cursor.getString(cursor.getColumnIndex(TablesContract.Request.COLUMN_ENGINE_VOLUME_ID)));

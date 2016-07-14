@@ -102,7 +102,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".activities.confirm_request"></activity>
+        <activity android:name=".activities.confirmRequest"></activity>
     </application>
 
 </manifest>

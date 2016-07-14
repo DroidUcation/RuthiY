@@ -2,6 +2,7 @@ package com.ruthiy.care2car.activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,6 +42,7 @@ import com.ruthiy.care2car.entities.Request;
 import com.ruthiy.care2car.entities.User;
 import com.ruthiy.care2car.services.SendMessages;
 import com.ruthiy.care2car.utils.Config;
+import com.ruthiy.care2car.utils.sharedPreferencesUtil;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -63,8 +65,6 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
     private static final int LOCATION_PERMISSION = 583;
     Marker fromMarker = null;
     Marker userMarker = null;
-    public static final String MyPREFERENCES = "MyPrefs" ;
-    SharedPreferences sharedpreferences;
 
     Location mLastLocation;
 
@@ -73,7 +73,6 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_request);
         buildGoogleApiClient();
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         Bundle  b = this.getIntent().getExtras();
 
          tvlocation = (TextView) findViewById(R.id.location);
@@ -87,16 +86,18 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
 
         if (b.containsKey("request")) {
             String requestKey = b.getString("request");
-            getRequestFromFireBase(requestKey);
+          if (getRequestFromFireBase(requestKey)){
+              Log.d("ViewRequestActivity" , " --> request is downloaded");
+          }
         }
 
-        if (b.containsKey("userLocation")) {
+       /* if (b.containsKey("userLocation")) {
             ArrayList<Location> locations = getIntent().getParcelableArrayListExtra("userLocation");
             for(Location userLocations : locations) {
                 Log.i("", userLocations.toString());
                 userLocation = userLocations;
             }
-        }
+        }*/
         final Button bnCall = (Button) findViewById(R.id.bn_call);
         final Button bnNavigate = (Button) findViewById(R.id.bn_navigate);
 
@@ -117,7 +118,7 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
                 bnNavigate.setVisibility(View.VISIBLE);
                 declineRequset.setVisibility(View.INVISIBLE);
                 acceptRequset.setVisibility(View.VISIBLE);
-                String userKey = sharedpreferences.getString("key", null);
+                String userKey = sharedPreferencesUtil.getUserKeyFromSP(getBaseContext());
                 new SendMessages().execute("https://fcm.googleapis.com/fcm/send", requestFB.getUserToken(), userKey, "true");
             }
         });
@@ -135,13 +136,28 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
         bnNavigate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               /* String phoneNumber = tvphone.getText().toString();
-                Intent in=new Intent(Intent.ACTION_CALL, Uri.parse(phoneNumber));
-                if (in != null) startActivity(in);*/
+                // Create a Uri from an intent string. Use the result to create an Intent.
+                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?"  +
+                        "&daddr=" + String.valueOf(requestFB.getLatitude()) + ","
+                        + String.valueOf(requestFB.getLongitude()));
+
+                // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                // Make the Intent explicit by setting the Google Maps package
+                mapIntent.setPackage("com.google.android.apps.maps");
+                // Attempt to start an activity that can handle the Intent
+                try {
+                    startActivity(mapIntent);
+                }catch (ActivityNotFoundException e){
+                    Log.d("ViewRequestActivity", "No Activity found to handle Intent") ;
+                    noNavigationAppDialog();
+                }
+
             }
         });
 
     }
+
     public void confirmCancelRequestDialog(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
        /* new AlertDialog.Builder(this).setTitle("Argh").setMessage("Watch out!").setIcon(R.drawable.icon).setNeutralButton("Close", null).show();
@@ -159,7 +175,26 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-    public void getRequestFromFireBase(String requestKey){
+
+    public void noNavigationAppDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+       /* new AlertDialog.Builder(this).setTitle("Argh").setMessage("Watch out!").setIcon(R.drawable.icon).setNeutralButton("Close", null).show();
+        */
+
+        alertDialogBuilder.setTitle("  Care2Car");
+        alertDialogBuilder.setMessage("Navigation Application not found on this device ");
+        alertDialogBuilder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //finish();
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+    public boolean getRequestFromFireBase(String requestKey){
         Firebase.setAndroidContext(this);
         Firebase ref = new Firebase(Config.FIREBASE_REQUESTS_URL);
         ref.child(requestKey).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -171,6 +206,12 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
                 tvProblemDescription = (TextView) findViewById(R.id.problemDescription);
                 tvName = (TextView) findViewById(R.id.name);
                 tvphone = (TextView) findViewById(R.id.phone);
+                userLocation = new Location(" User Location");
+                //Location targetLocation = new Location("");//provider name is unecessary
+                userLocation.setLatitude(requestFB.getLatitude());//your coords of course
+                userLocation.setLongitude(requestFB.getLongitude());
+
+                //float distanceInMeters =  targetLocation.distanceTo(myLocation);
 
                 tvName.setText(requestFB.getUserName());
                 tvphone.setText(requestFB.getUserPhone());
@@ -185,6 +226,7 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
             public void onCancelled(FirebaseError firebaseError) {
             }
         });
+        return requestFB!=null;
     }
 
 

@@ -12,6 +12,7 @@ import com.ruthiy.care2car.activities.ViewRequestActivity;
 import com.ruthiy.care2car.activities.confirmRequest;
 import com.ruthiy.care2car.entities.Request;
 import com.ruthiy.care2car.utils.Config;
+import com.ruthiy.care2car.utils.sharedPreferencesUtil;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -31,19 +32,13 @@ import java.util.Map;
 public class FCMMessageHandler extends FirebaseMessagingService {
     public static final int MESSAGE_NOTIFICATION_ID = 435345;
     Request requestFB;
-    public static final String MyPREFERENCES = "MyPrefs" ;
-    SharedPreferences sharedpreferences;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         String message = remoteMessage.getFrom();
-        //String from = remoteMessage.getFrom();
-
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         if (message.startsWith("/topics/")) {
-
-                sendNotificationTopic(remoteMessage.getData().get("message"));
+            checkIfIsCurrentUser(remoteMessage.getData().get("message"));
 
         } else {
             // normal downstream message.
@@ -102,7 +97,6 @@ public class FCMMessageHandler extends FirebaseMessagingService {
 
     }
     private void sendNotificationTopic(String messageBody) {
-        //  if (!checkIfIsCurrentUser(messageBody)) {
         Intent intent = new Intent(this, ViewRequestActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("request", messageBody);
@@ -115,7 +109,7 @@ public class FCMMessageHandler extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.care2car)
                 .setContentTitle("Care2Car")
-                .setContentText("Someone need your help!")
+                .setContentText("Someone needs your help!")
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
@@ -125,13 +119,9 @@ public class FCMMessageHandler extends FirebaseMessagingService {
 
         notificationManager.notify(0, notificationBuilder.build());
         /*notification.setAutoCancel(true);*/
-
-        //  }
     }
 
-    private boolean checkIfIsCurrentUser(String remoteMessage) {
-
-        String userToken = sharedpreferences.getString("token", null);
+    private void checkIfIsCurrentUser(String remoteMessage) {
         // message received from some topic.
         //Map<String, String> data = remoteMessage.getData();
         Firebase.setAndroidContext(this);
@@ -141,12 +131,13 @@ public class FCMMessageHandler extends FirebaseMessagingService {
             public void onDataChange(DataSnapshot snapshot) {
                 System.out.println("There are " + snapshot.getChildrenCount() + " blog posts");
                 requestFB = snapshot.getValue(Request.class);
+                if (!requestFB.getUserToken().equals(sharedPreferencesUtil.getUserTokenFromSP(getBaseContext())))
+                    sendNotificationTopic(snapshot.getKey());
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {
             }
         });
-        return (requestFB.getUserToken().equals(userToken));
     }
 
 

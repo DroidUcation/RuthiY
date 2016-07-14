@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
@@ -17,6 +18,7 @@ import com.ruthiy.care2car.R;
 import com.ruthiy.care2car.entities.Request;
 import com.ruthiy.care2car.entities.User;
 import com.ruthiy.care2car.utils.Config;
+import com.ruthiy.care2car.utils.sharedPreferencesUtil;
 
 public class confirmRequest extends AppCompatActivity {
 
@@ -24,6 +26,7 @@ public class confirmRequest extends AppCompatActivity {
     TextView tvUserName ;
     TextView tvVolunteerName ;
     TextView tvVolunteerPhone ;
+    User userFB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +40,8 @@ public class confirmRequest extends AppCompatActivity {
         final Button bnCall = (Button) findViewById(R.id.bn_call);
         if (b.containsKey("userKey")) {
             String requestKey = b.getString("userKey");
-            getRequestFromFireBase(requestKey);
+            if(getVolunteerUserFromFireBase(requestKey));
+            if(getUserDetailsFromFireBase());
         }
 
         bnCall.setOnClickListener(new View.OnClickListener() {
@@ -52,7 +56,7 @@ public class confirmRequest extends AppCompatActivity {
         });
     }
 
-    public void getRequestFromFireBase(String userKey){
+    public boolean getVolunteerUserFromFireBase(String userKey){
         Firebase.setAndroidContext(this);
         Firebase ref = new Firebase(Config.FIREBASE_USER_URL);
         ref.child(userKey).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -61,13 +65,30 @@ public class confirmRequest extends AppCompatActivity {
                 System.out.println("There are " + snapshot.getChildrenCount() + " blog posts");
                 volunteerUser = snapshot.getValue(User.class);
 
-                //tvUserName.setText(tvUserName.getText()+ getUserName());
-                tvVolunteerName.setText(tvUserName.getText()+ volunteerUser.getName());
-                tvVolunteerPhone.setText(tvUserName.getText()+ volunteerUser.getPhoneNumber());
+
+                tvVolunteerName.setText( volunteerUser.getName()+ tvVolunteerName.getText());
+                tvVolunteerPhone.setText(tvVolunteerPhone.getText()+ volunteerUser.getPhoneNumber());
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {
             }
         });
+        return volunteerUser!=null;
+    }
+    public boolean getUserDetailsFromFireBase(){
+        Firebase.setAndroidContext(this);
+        Firebase ref = new Firebase(Config.FIREBASE_USER_URL);
+        ref.child(sharedPreferencesUtil.getUserKeyFromSP(this)).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                System.out.println("There are " + snapshot.getChildrenCount() + " blog posts");
+                userFB = snapshot.getValue(User.class);
+                tvUserName.setText(tvUserName.getText()+ userFB.getName());
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
+        return (userFB != null);
     }
 }

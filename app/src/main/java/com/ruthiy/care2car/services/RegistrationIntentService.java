@@ -32,7 +32,7 @@ public class RegistrationIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         String areaId =  intent.getStringExtra("areaId");
-        FirebaseMessaging.getInstance().subscribeToTopic(areaId);
+        FirebaseMessaging.getInstance().subscribeToTopic(areaId.replaceAll("\\s+",""));
     }
 
     // Make a call to Instance API

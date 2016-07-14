@@ -208,6 +208,8 @@ public class TablesContract implements BaseColumns {
         public static final String COLUMN_REMARKS = "REMARKS";
         public static final String COLUMN_REQUEST_KEY = "REQUEST_KEY";
         public static final String COLUMN_USER_TOKEN = "USER_TOKEN";
+        public static final String COLUMN_LOCATION_LATITUDE = "LOCATION_LATITUDE";
+        public static final String COLUMN_LOCATION_LONGITUDE = "LOCATION_LONGITUDE";
 
 
         private static final String SQL_CREATE =
@@ -220,6 +222,8 @@ public class TablesContract implements BaseColumns {
                         COLUMN_USER_TOKEN +  TEXT_TYPE + COMMA_SEP +
                         COLUMN_AREA_ID +  TEXT_TYPE + COMMA_SEP +
                         COLUMN_LOCATION +  TEXT_TYPE + COMMA_SEP +
+                        COLUMN_LOCATION_LATITUDE +  TEXT_TYPE + COMMA_SEP +
+                        COLUMN_LOCATION_LONGITUDE +  TEXT_TYPE + COMMA_SEP +
                         COLUMN_CATEGORY_ID +  TEXT_TYPE + COMMA_SEP +
                         COLUMN_ENGINE_VOLUME_ID +  TEXT_TYPE + COMMA_SEP +
                         COLUMN_REQUEST_ST_DATE +  TEXT_TYPE + COMMA_SEP +
@@ -227,7 +231,6 @@ public class TablesContract implements BaseColumns {
                         COLUMN_REQUEST_STATUS_ID +  TEXT_TYPE + COMMA_SEP +
                         COLUMN_VOLUNTEER_ID +  INTEGER_TYPE + COMMA_SEP +
                         COLUMN_REMARKS +  TEXT_TYPE+ ")";
-
 
         public static String getSqlCreate() {
             return SQL_CREATE;

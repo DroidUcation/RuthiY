@@ -13,6 +13,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -36,13 +37,14 @@ import com.ruthiy.care2car.R;
 import com.ruthiy.care2car.entities.User;
 import com.ruthiy.care2car.services.GPSTracker;
 import com.ruthiy.care2car.tables.TablesContract;
+import com.ruthiy.care2car.utils.sharedPreferencesUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener  {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
     private Fragment mMapFragment;
 
     private GoogleMap mMap;
@@ -52,15 +54,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     Location mLastLocation;
     TextView currentLocation;
-    public static final String MyPREFERENCES = "MyPrefs" ;
-    public static final String Name = "nameKey";
-    SharedPreferences sharedpreferences;
     Gson mGson = new Gson();
     User currentUser;
     String city;
     String address;
+
     // GPSTracker class
     GPSTracker gps;
+    boolean gpsFlag;
 
 
     @Override
@@ -71,10 +72,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
         buildGoogleApiClient();
 
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        String user = sharedpreferences.getString(Name, null);
-        currentUser = mGson.fromJson(user, User.class);
-
+        currentUser = sharedPreferencesUtil.getUserFromSP(this);
+        gpsFlag = true;
         /*ImageButton findLoc = (ImageButton)  findViewById(R.id.ib_findLocation);
         findLoc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,15 +86,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, OpenRequest.class);
-                currentUser.setLocation(mLastLocation);
-                ArrayList<User> list = new ArrayList<User>();
-                list.add(currentUser);
-                intent.putParcelableArrayListExtra("user", list);
-                intent.putExtra("area", city);
-                intent.putExtra("address",address + ", " + city);
-                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                if (intent != null) startActivity(intent);
+                if(mLastLocation != null) {
+                    Intent intent = new Intent(MainActivity.this, OpenRequest.class);
+                    currentUser.setLocation(mLastLocation);
+                    ArrayList<User> list = new ArrayList<User>();
+                    list.add(currentUser);
+                    intent.putParcelableArrayListExtra("user", list);
+                    intent.putExtra("area", city);
+                    intent.putExtra("address", address + ", " + city);
+                    intent.putExtra("longitude", mLastLocation.getLongitude());
+                    intent.putExtra("latitude", mLastLocation.getLatitude());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    if (intent != null) startActivity(intent);
+                }
+                else{
+                    buildAlertMessageNoGps();
+                }
             }
         });
 
@@ -121,13 +127,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String country = addresses.get(0).getCountryName();
                 String postalCode = addresses.get(0).getPostalCode();
                 String knownName = addresses.get(0).getFeatureName();
-                currentLocation.setText(address + ", " + city );
+                currentLocation.setText(address + ", " + city);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void changeContactDetailsDialog(){
+
+    public void changeContactDetailsDialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage("Would you like to change your contact details? ");
 
@@ -139,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //finish();
@@ -181,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onConnected(Bundle bundle) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            mGoogleApiClient.disconnect();
             requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION);
         } else {
             getLocation();
@@ -197,13 +203,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 List<Address> addresses;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     geocoder = new Geocoder(this, Locale.forLanguageTag("en-us"));
-                }
-                else{
+                } else {
                     geocoder = new Geocoder(this, Locale.getDefault());
                 }
 
                 try {
-                    addresses = geocoder.getFromLocation(mLastLocation.getLatitude(),  mLastLocation.getLongitude(), 1);
+                    addresses = geocoder.getFromLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 1);
                     if (addresses.size() > 0) {
                         address = addresses.get(0).getAddressLine(0);
                         city = addresses.get(0).getLocality();
@@ -216,8 +221,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }else{
+            } else if(gpsFlag) {
                 buildAlertMessageNoGps();
+                gpsFlag = false;
+
             }
         }
     }
@@ -285,14 +292,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS),1);
+                        startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), 1);
                     }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        dialog.cancel();
-                    }
-                }).setCancelable(true);
+                });
+        if (gpsFlag) {
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                    dialog.cancel();
+                }
+            }).setCancelable(true);
+        }
+        else {
+            builder.setNeutralButton("GPS is ON", new DialogInterface.OnClickListener() {
+                public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                  getLocation();
+                }
+            }).setCancelable(false);
+        }
         final AlertDialog alert = builder.create();
         alert.show();
     }

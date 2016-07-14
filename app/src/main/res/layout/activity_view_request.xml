@@ -15,146 +15,162 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:layout_height="0dp"
-        android:layout_weight="1.2"
+        android:layout_weight="3.5"
         tools:context=".activities.ViewRequestActivity"/>
+
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <com.ruthiy.care2car.utils.views.MyTextViewBold
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/tv1"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="#F9A825"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:text="Someone needs your help!"/>
+
+                <com.ruthiy.care2car.utils.views.MyTextViewBold
+                    android:id="@+id/where"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv1"
+                    android:layout_alignParentLeft="true"
+                    android:labelFor="@+id/location"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="16dp"
+                    android:textStyle="bold"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Where: "/>
+
+                <com.ruthiy.care2car.utils.views.MyTextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:hint="wait.."
+                    android:layout_below="@id/where"
+                    android:layout_alignParentLeft="true" />
+
+
+                <View
+                    android:background="#E0E0E0"
+                    android:layout_below="@id/location"
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="16dp"
+                    android:layout_height="1dp"
+                    />
+
+                <com.ruthiy.care2car.utils.views.MyTextViewBold
+                    android:id="@+id/help_With"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:textStyle="bold"
+                    android:layout_below="@id/location"
+                    android:layout_alignParentLeft="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Problem Description: "/>
+
+                <com.ruthiy.care2car.utils.views.MyTextView
+                    android:id="@+id/problemDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/help_With"
+                    android:inputType="textMultiLine"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:hint="wait.."
+                    android:scrollIndicators="top|bottom|start|end" />
+
+                <View
+                    android:background="#E0E0E0"
+                    android:layout_below="@id/problemDescription"
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="16dp"
+                    android:layout_height="1dp"
+                    />
+
+                <com.ruthiy.care2car.utils.views.MyTextViewBold
+                    android:id="@+id/contact_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_below="@id/problemDescription"
+                    android:textStyle="bold"
+                    android:layout_alignParentLeft="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/contactDetails"/>
+
+                <com.ruthiy.care2car.utils.views.MyTextViewBold
+                    android:id="@+id/nameTittle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/contact_details"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginRight="7dp"
+                    android:textStyle="bold"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Name: "/>
+
+                <com.ruthiy.care2car.utils.views.MyTextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_toRightOf="@id/nameTittle"
+                    android:layout_below="@id/contact_details"
+                    android:inputType="textMultiLine"
+                    android:layout_marginRight="12dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:hint="wait.."/>
+
+                <com.ruthiy.care2car.utils.views.MyTextViewBold
+                    android:id="@+id/phoneLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_toRightOf="@id/name"
+                    android:layout_below="@id/contact_details"
+                    android:layout_marginRight="7dp"
+                    android:textStyle="bold"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:hint="Phone:"/>
+
+                <com.ruthiy.care2car.utils.views.MyTextView
+                    android:id="@+id/phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_toRightOf="@id/phoneLabel"
+                    android:layout_below="@id/contact_details"
+                    android:inputType="textMultiLine"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:hint="wait.."/>
+            </RelativeLayout>
+        </ScrollView>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2">
-
-        <com.ruthiy.care2car.utils.views.MyTextViewBold
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv1"
-            android:layout_marginBottom="10dp"
-            android:textColor="#F9A825"
-            android:layout_centerHorizontal="true"
-            android:gravity="fill_vertical"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:text="Someone needs your help!"/>
-
-        <com.ruthiy.care2car.utils.views.MyTextViewBold
-            android:id="@+id/where"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv1"
-            android:layout_alignParentLeft="true"
-            android:labelFor="@+id/location"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="16dp"
-            android:textStyle="bold"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Where: "/>
-
-       <com.ruthiy.care2car.utils.views.MyTextView
-            android:id="@+id/location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           android:layout_marginBottom="10dp"
-           android:textAppearance="?android:attr/textAppearanceSmall"
-            android:hint="Item Name"
-           android:layout_below="@id/where"
-           android:layout_alignParentLeft="true" />
-
-        <View
-            android:layout_below="@id/location"
-            android:background="#9E9E9E"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="16dp"
-            android:layout_height="1dp"
-            />
-
-        <com.ruthiy.care2car.utils.views.MyTextViewBold
-            android:id="@+id/help_With"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="16dp"
-            android:textStyle="bold"
-            android:layout_below="@id/location"
-            android:layout_alignParentLeft="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Problem Description: "/>
-
-        <com.ruthiy.care2car.utils.views.MyTextView
-            android:id="@+id/problemDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/help_With"
-            android:inputType="textMultiLine"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:hint="Item Name"/>
-        <View
-            android:background="#9E9E9E"
-            android:layout_below="@id/problemDescription"
-            android:layout_marginBottom="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            />
-
-        <com.ruthiy.care2car.utils.views.MyTextViewBold
-            android:id="@+id/contact_details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="16dp"
-            android:layout_below="@id/problemDescription"
-            android:textStyle="bold"
-            android:layout_alignParentLeft="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Contact Details: "/>
-
-        <com.ruthiy.care2car.utils.views.MyTextViewBold
-            android:id="@+id/nameTittle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/contact_details"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="7dp"
-            android:textStyle="bold"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Name: "/>
-
-        <com.ruthiy.care2car.utils.views.MyTextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_toRightOf="@id/nameTittle"
-            android:layout_below="@id/contact_details"
-            android:inputType="textMultiLine"
-            android:layout_marginRight="12dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:hint="Item Name"/>
-
-        <com.ruthiy.care2car.utils.views.MyTextViewBold
-            android:id="@+id/phoneLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_toRightOf="@id/name"
-            android:layout_below="@id/contact_details"
-            android:layout_marginRight="7dp"
-            android:textStyle="bold"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:hint="Phone:"/>
-
-        <com.ruthiy.care2car.utils.views.MyTextView
-            android:id="@+id/phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_toRightOf="@id/phoneLabel"
-            android:layout_below="@id/contact_details"
-            android:inputType="textMultiLine"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:hint="Item Name"/>
-
+        android:layout_weight="1">
         <com.ruthiy.care2car.utils.views.MyButton
             android:id="@+id/bn_acceptRequset"
             android:layout_width="160dp"
@@ -210,7 +226,6 @@
             android:visibility="invisible" />
 
     </RelativeLayout>
-
 
 </LinearLayout>
 

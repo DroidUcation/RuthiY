@@ -1,157 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
 
-    <com.ruthiy.care2car.utils.views.MyTextView
-        android:id="@+id/location"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_weight="1"
-        android:singleLine="true"
-        android:textSize="20sp"
-        android:text="Uknown Adress"
-        android:gravity="center_horizontal"
-        android:textColor="@color/black_87pc"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
-    <com.ruthiy.care2car.utils.views.MyTextViewBold
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#F9A825"
-        android:textStyle="bold"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="What is your problem?"/>
+        <com.ruthiy.care2car.utils.views.MyTextView
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:textSize="20sp"
+            android:text="Uknown Adress"
+            android:gravity="center_horizontal"
+            android:textColor="@color/black_87pc"/>
+
+        <com.ruthiy.care2car.utils.views.MyTextViewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#F9A825"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="What is your problem?"/>
 
 
         />
-      <Spinner
-        android:id="@+id/spinner_category"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:textAppearance="?android:attr/absListViewStyle"
-        android:layout_weight="1"
-        android:entries="@array/category"/>
+        <Spinner
+            android:id="@+id/spinner_category"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:textAppearance="?android:attr/absListViewStyle"
+            android:layout_weight="1"
+            android:entries="@array/category"/>
 
-    <View
-        android:background="#E0E0E0"
-        android:layout_width="match_parent"
+        <View
+            android:background="#E0E0E0"
+            android:layout_width="match_parent"
 
-        android:layout_marginBottom="16dp"
-        android:layout_height="1dp"
-        />
+            android:layout_marginBottom="16dp"
+            android:layout_height="1dp"
+            />
 
-    <com.ruthiy.care2car.utils.views.MyTextViewBold
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#F9A825"
-        android:text="Choose your car type:"/>
+        <com.ruthiy.care2car.utils.views.MyTextViewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#F9A825"
+            android:text="Choose your car type:"/>
 
-    <Spinner
-        android:id="@+id/spinner_type"
-        android:layout_width="match_parent"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:entries="@array/type"/>
-    <View
-        android:background="#E0E0E0"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="16dp"
-        android:layout_height="1dp"
-        />
-    <com.ruthiy.care2car.utils.views.MyTextViewBold
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#F9A825"
-        android:text="Remarks:"/>
-
-
-    <com.ruthiy.care2car.utils.views.MyEditText
-        android:id="@+id/et_remarks"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="#00000000"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_weight="1"/>
-    <View
-        android:background="#E0E0E0"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="16dp"
-        android:layout_height="1dp"
-        />
-    <com.ruthiy.care2car.utils.views.MyTextViewBold
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#F9A825"
-        android:text="Your Name:"/>
+        <Spinner
+            android:id="@+id/spinner_type"
+            android:layout_width="match_parent"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:entries="@array/type"/>
+        <View
+            android:background="#E0E0E0"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="16dp"
+            android:layout_height="1dp"
+            />
+        <com.ruthiy.care2car.utils.views.MyTextViewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#F9A825"
+            android:text="Remarks:"/>
 
 
-
-
-    <com.ruthiy.care2car.utils.views.MyEditText
-        android:id="@+id/et_user_name"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="#00000000"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_weight="1"  />
-
-    <View
-        android:background="#E0E0E0"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="16dp"
-        android:layout_height="1dp"
-        />
-    <com.ruthiy.care2car.utils.views.MyTextViewBold
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#F9A825"
-        android:text="Your Phone:"/>
+        <com.ruthiy.care2car.utils.views.MyEditText
+            android:id="@+id/et_remarks"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#00000000"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_weight="1"/>
+        <View
+            android:background="#E0E0E0"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="16dp"
+            android:layout_height="1dp"
+            />
+        <com.ruthiy.care2car.utils.views.MyTextViewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#F9A825"
+            android:text="Your Name:"/>
 
 
 
-    <com.ruthiy.care2car.utils.views.MyEditText
-        android:id="@+id/et_user_phone"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:inputType="phone"
-        android:background="#00000000"
-        android:gravity="left"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_alignParentLeft="true"
-        android:layout_weight="1"  />
+
+        <com.ruthiy.care2car.utils.views.MyEditText
+            android:id="@+id/et_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#00000000"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_weight="1"  />
+
+        <View
+            android:background="#E0E0E0"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="16dp"
+            android:layout_height="1dp"
+            />
+        <com.ruthiy.care2car.utils.views.MyTextViewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#F9A825"
+            android:text="Your Phone:"/>
 
 
-    <View
-        android:background="#E0E0E0"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="16dp"
-        android:layout_height="1dp"
-        />
 
-    <com.ruthiy.care2car.utils.views.MyButton
-        android:id="@+id/bn_openRequset"
-        android:layout_width="100dp"
+        <com.ruthiy.care2car.utils.views.MyEditText
+            android:id="@+id/et_user_phone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:inputType="phone"
+            android:background="#00000000"
+            android:gravity="left"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_alignParentLeft="true"
+            android:layout_weight="1"  />
+
+
+        <View
+            android:background="#E0E0E0"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="16dp"
+            android:layout_height="1dp"
+            />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textAllCaps="false"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:layout_marginBottom="9dp"
-        android:background="@drawable/mybutton"
-        android:text="@string/accept" />
+        android:id="@+id/progressBar2" />
 
+        <com.ruthiy.care2car.utils.views.MyButton
+            android:id="@+id/bn_openRequset"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:layout_marginBottom="9dp"
+            android:background="@drawable/mybutton"
+            android:text="@string/accept"
+            android:visibility="gone"/>
 
 </LinearLayout>
