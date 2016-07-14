@@ -135,9 +135,9 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
         bnNavigate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String phoneNumber = tvphone.getText().toString();
+               /* String phoneNumber = tvphone.getText().toString();
                 Intent in=new Intent(Intent.ACTION_CALL, Uri.parse(phoneNumber));
-                if (in != null) startActivity(in);
+                if (in != null) startActivity(in);*/
             }
         });
 
@@ -176,7 +176,6 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
                 tvphone.setText(requestFB.getUserPhone());
                 String ProblemDescription = requestFB.getCategoryId();
                 ProblemDescription= ProblemDescription.concat(", Car Type; ").concat(requestFB.getCarTypeId());
-                ProblemDescription= ProblemDescription.concat(", Engine Volume; ").concat(requestFB.getEngineVolumeId());
                 ProblemDescription= ProblemDescription.concat(", Remarks; ").concat(requestFB.getRemarks());
                 tvProblemDescription = (TextView) findViewById(R.id.problemDescription);
                 tvProblemDescription.setText(ProblemDescription);

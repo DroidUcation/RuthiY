@@ -72,7 +72,6 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
 
         setContentView(R.layout.activity_open_request);
         setupSpinnerAdapter(R.id.spinner_category, R.array.category, null);
-        setupSpinnerAdapter(R.id.spinner_engineValume, R.array.engineValume, null);
         setupSpinnerAdapter(R.id.spinner_type, R.array.type, null);
         getUserDetailsFromFireBase();
         Bundle  b = this.getIntent().getExtras();
@@ -162,8 +161,6 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
         switch (parent.getId()) {
             case R.id.spinner_category:
                 request.setCategoryId((String) parent.getSelectedItem());
-            case R.id.spinner_engineValume:
-                request.setEngineVolumeId((String) parent.getSelectedItem());
             case R.id.spinner_type:
                 request.setCarTypeId((String) parent.getSelectedItem());
         }

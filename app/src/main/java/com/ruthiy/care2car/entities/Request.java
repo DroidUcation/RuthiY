@@ -22,7 +22,9 @@ public class Request implements Serializable {
     String userName ;
     String userPhone ;
     String userToken ;
-    String areaId ;
+    String areaId ;/*
+    double latitude ;
+    double longitude ;*/
     String location ;
     String categoryId ;
     String engineVolumeId ;
@@ -129,6 +131,14 @@ public class Request implements Serializable {
     public String getRequestKey() { return requestKey;}
 
     public void setRequestKey(String requestKey) {this.requestKey = requestKey;}
+
+    /*public double getLatitude() { return latitude;}
+
+    public void setLatitude(double latitude) { this.latitude = latitude;}
+
+    public double getLongitude() {return longitude;}
+
+    public void setLongitude(double longitude) {this.longitude = longitude;}*/
 
     public static ContentValues getForInsert(Request request){
         ContentValues initialValues = new ContentValues();

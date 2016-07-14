@@ -36,7 +36,6 @@ public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
         //You can implement this method to store the token on your server
         //Not required for current project
         SharedPreferences sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        ;
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString("token", token);
         editor.commit();

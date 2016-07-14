@@ -24,11 +24,6 @@ public class RegistrationIntentService extends IntentService {
 
     // abbreviated tag name
     private static final String TAG = "RegIntentService";
-    public static final String MyPREFERENCES = "MyPrefs" ;
-    Gson mGson = new Gson();
-    User currentUser;
-    public static final String Name = "nameKey";
-
 
     public RegistrationIntentService() {
         super(TAG);
@@ -36,19 +31,11 @@ public class RegistrationIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        String areaId =  intent.getStringExtra("areaId");
+        FirebaseMessaging.getInstance().subscribeToTopic(areaId);
+    }
 
-        SharedPreferences sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        sharedpreferences.edit().clear();
-        sharedpreferences.edit().commit();
-        String user = sharedpreferences.getString(Name, null);
-        String areaId = "";
-        if (user!=null) {
-            currentUser = mGson.fromJson(user, User.class);
-            areaId =  currentUser.getAreaId().toString();
-            FirebaseMessaging.getInstance().subscribeToTopic(areaId);
-        }
-
-        // Make a call to Instance API
+    // Make a call to Instance API
       /*  FirebaseInstanceId instanceID = FirebaseInstanceId.getInstance();
         String senderId = getResources().getString(R.string.gcm_defaultSenderId);
         // request token that will be used by the server to send push notifications
@@ -57,7 +44,6 @@ public class RegistrationIntentService extends IntentService {
 
         // pass along this data
         sendRegistrationToServer(token);*/
-    }
 
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.

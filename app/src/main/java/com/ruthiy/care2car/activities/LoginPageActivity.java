@@ -121,6 +121,7 @@ public class LoginPageActivity extends AppCompatActivity {
     private  void registrationIntentService() {
         if (checkPlayServices()) {
             Intent intent = new Intent(this, RegistrationIntentService.class);
+            intent.putExtra("areaId", sp1.getSelectedItem().toString());
             startService(intent);
         }
     }

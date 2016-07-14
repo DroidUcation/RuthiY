@@ -72,9 +72,11 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activities.OpenRequest" />
+        <activity
+            android:name=".activities.OpenRequest" />
         <activity android:name=".activities.ViewRequestActivity" />
-        <activity android:name=".activities.LoginPageActivity">
+        <activity android:windowSoftInputMode="stateVisible|stateAlwaysVisible"
+            android:name=".activities.LoginPageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
