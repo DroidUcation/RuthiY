@@ -28,14 +28,14 @@
         android:layout_gravity="center"
         android:textSize="30dp" />
 
-    <com.ruthiy.care2car.utils.views.MyTextView
+    <com.ruthiy.care2car.utils.views.MyTextViewBold
         android:id="@+id/tvVolunteerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=" on his way to you!"
         android:layout_gravity="center"
         android:layout_marginBottom="15dp"
-        android:textSize="30dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#FBC02D" />
 
     <com.ruthiy.care2car.utils.views.MyTextView

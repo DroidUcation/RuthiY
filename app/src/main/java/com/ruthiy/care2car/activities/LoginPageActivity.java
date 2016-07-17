@@ -40,7 +40,7 @@ import com.ruthiy.care2car.utils.Config;
 
 public class LoginPageActivity extends AppCompatActivity {
     EditText ed1,ed2;
-    Spinner sp1;
+    /*Spinner sp1;*/
     Button b1;
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static final String Name = "nameKey";
@@ -69,16 +69,16 @@ public class LoginPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login_page);
         ed1=(EditText)findViewById(R.id.editText);
         ed2=(EditText)findViewById(R.id.editText2);
-        sp1=(Spinner) findViewById(R.id.sp_area);
+        /* sp1=(Spinner) findViewById(R.id.sp_area);*/
         b1=(Button)findViewById(R.id.button);
-        sp1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+       /* sp1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 b1.requestFocus();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
-        });
+        });*/
 
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
@@ -89,18 +89,18 @@ public class LoginPageActivity extends AppCompatActivity {
 
                 ed1.setVisibility(View.INVISIBLE);
                 ed2.setVisibility(View.INVISIBLE);
-                sp1.setVisibility(View.INVISIBLE);
+             /*   sp1.setVisibility(View.INVISIBLE);*/
                 b1.setVisibility(View.INVISIBLE);
                 user = new User();
 
                 String n  = ed1.getText().toString();
                 String ph  = ed2.getText().toString();
-                String e  = sp1.getSelectedItem().toString();
+              /*  String e  = sp1.getSelectedItem().toString();*/
                 ProgressBar progressBar =(ProgressBar) findViewById(R.id.progressBar);
                 progressBar.setVisibility(View.VISIBLE);
                 user.setName(n);
                 user.setPhoneNumber(ph);
-                user.setAreaId(e);
+              /*  user.setAreaId(e);*/
 
                 SharedPreferences.Editor editor = sharedpreferences.edit();
 
@@ -119,7 +119,7 @@ public class LoginPageActivity extends AppCompatActivity {
     private  void registrationIntentService() {
         if (checkPlayServices()) {
             Intent intent = new Intent(this, RegistrationIntentService.class);
-            intent.putExtra("areaId", sp1.getSelectedItem().toString());
+            /*intent.putExtra("areaId", sp1.getSelectedItem().toString());*/
             startService(intent);
         }
     }
@@ -149,9 +149,12 @@ public class LoginPageActivity extends AppCompatActivity {
         int ur2i = getContentResolver().update(TablesContract.User.CONTENT_URI.buildUpon().appendPath(userId.toString()).build(), initialValues, null,null );
     }
 
-    public void saveUserOnFireBase(Long userId){
+    public void saveUserOnFireBase(Long userId){/*
         DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        String userKey = mDatabase.child("users").push().getKey();
+        mDatabase.child("users").child(userKey).setValue(user);*/
 
         Firebase.setAndroidContext(this);
         Firebase ref = new Firebase(Config.FIREBASE_USER_URL);

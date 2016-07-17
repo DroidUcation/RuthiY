@@ -12,7 +12,7 @@ import com.ruthiy.care2car.entities.User;
  */
 
 
-public class sharedPreferencesUtil {
+public class SharedPrefUtil {
 
     Context context;
     public static final String MyPREFERENCES = "MyPrefs" ;

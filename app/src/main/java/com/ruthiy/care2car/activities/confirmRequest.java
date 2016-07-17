@@ -6,19 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.ruthiy.care2car.R;
-import com.ruthiy.care2car.entities.Request;
 import com.ruthiy.care2car.entities.User;
 import com.ruthiy.care2car.utils.Config;
-import com.ruthiy.care2car.utils.sharedPreferencesUtil;
+import com.ruthiy.care2car.utils.SharedPrefUtil;
 
 public class confirmRequest extends AppCompatActivity {
 
@@ -78,7 +75,7 @@ public class confirmRequest extends AppCompatActivity {
     public boolean getUserDetailsFromFireBase(){
         Firebase.setAndroidContext(this);
         Firebase ref = new Firebase(Config.FIREBASE_USER_URL);
-        ref.child(sharedPreferencesUtil.getUserKeyFromSP(this)).addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.child(SharedPrefUtil.getUserKeyFromSP(this)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 System.out.println("There are " + snapshot.getChildrenCount() + " blog posts");

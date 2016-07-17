@@ -7,27 +7,19 @@ import com.firebase.client.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.ruthiy.care2car.R;
-import com.ruthiy.care2car.activities.MainActivity;
 import com.ruthiy.care2car.activities.ViewRequestActivity;
 import com.ruthiy.care2car.activities.confirmRequest;
 import com.ruthiy.care2car.entities.Request;
 import com.ruthiy.care2car.utils.Config;
-import com.ruthiy.care2car.utils.sharedPreferencesUtil;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.TextView;
-
-import java.util.Map;
 
 public class FCMMessageHandler extends FirebaseMessagingService {
     public static final int MESSAGE_NOTIFICATION_ID = 435345;
@@ -131,7 +123,7 @@ public class FCMMessageHandler extends FirebaseMessagingService {
             public void onDataChange(DataSnapshot snapshot) {
                 System.out.println("There are " + snapshot.getChildrenCount() + " blog posts");
                 requestFB = snapshot.getValue(Request.class);
-                if (!requestFB.getUserToken().equals(sharedPreferencesUtil.getUserTokenFromSP(getBaseContext())))
+                //if (!requestFB.getUserToken().equals(sharedPreferencesUtil.getUserTokenFromSP(getBaseContext())))
                     sendNotificationTopic(snapshot.getKey());
             }
             @Override

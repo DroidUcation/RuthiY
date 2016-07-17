@@ -3,17 +3,11 @@ package com.ruthiy.care2car.activities;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Typeface;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,20 +30,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
 import com.ruthiy.care2car.R;
 import com.ruthiy.care2car.entities.Request;
-import com.ruthiy.care2car.entities.User;
 import com.ruthiy.care2car.services.SendMessages;
 import com.ruthiy.care2car.utils.Config;
-import com.ruthiy.care2car.utils.sharedPreferencesUtil;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import com.ruthiy.care2car.utils.SharedPrefUtil;
 
 public class ViewRequestActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
@@ -59,6 +44,7 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
     TextView tvName ;
     TextView tvphone ;
     Location userLocation;
+    String requestKey;
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -85,7 +71,7 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
         mapFragment.getMapAsync(this);
 
         if (b.containsKey("request")) {
-            String requestKey = b.getString("request");
+            requestKey = b.getString("request");
           if (getRequestFromFireBase(requestKey)){
               Log.d("ViewRequestActivity" , " --> request is downloaded");
           }
@@ -118,7 +104,8 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
                 bnNavigate.setVisibility(View.VISIBLE);
                 declineRequset.setVisibility(View.INVISIBLE);
                 acceptRequset.setVisibility(View.VISIBLE);
-                String userKey = sharedPreferencesUtil.getUserKeyFromSP(getBaseContext());
+                saveRequestOnFireBase();
+                String userKey = SharedPrefUtil.getUserKeyFromSP(getBaseContext());
                 new SendMessages().execute("https://fcm.googleapis.com/fcm/send", requestFB.getUserToken(), userKey, "true");
             }
         });
@@ -227,6 +214,25 @@ public class ViewRequestActivity extends AppCompatActivity implements OnMapReady
             }
         });
         return requestFB!=null;
+    }
+
+    public void saveRequestOnFireBase(){
+        Firebase.setAndroidContext(this);
+        Firebase ref = new Firebase(Config.FIREBASE_REQUESTS_URL);
+        //Storing values to firebase
+        String userKeyFromSP = SharedPrefUtil.getUserKeyFromSP(this);
+        if (userKeyFromSP != null) {
+            requestFB.setVolunteerId(userKeyFromSP);
+            requestFB.setRequestKey(requestKey);
+        }
+
+        Log.d("ViewRequestActivity", "saveRequestOnFireBase: "+requestFB.getVolunteerId());
+
+        Firebase fbUsers = new Firebase(Config.FIREBASE_REQUESTS_VOLUNTEER_URL + userKeyFromSP);
+        //Storing values to firebase
+        fbUsers = fbUsers.push();
+        fbUsers.setValue(requestFB);
+
     }
 
 

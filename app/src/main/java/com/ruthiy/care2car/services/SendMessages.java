@@ -45,7 +45,7 @@ public class SendMessages extends AsyncTask<String, Void, String> {
             @Override
             public void onFailure(Call call, IOException e) {
                 // Something went wrong
-                Log.d("Hi", "Something went wrong");
+                Log.d("Hi", "Something went wrong :" + e.getMessage());
             }
 
             @Override

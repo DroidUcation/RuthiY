@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,7 +27,7 @@ import com.ruthiy.care2car.R;
 import com.ruthiy.care2car.entities.Request;
 import com.ruthiy.care2car.entities.User;
 import com.ruthiy.care2car.services.SendMessages;
-import com.ruthiy.care2car.utils.sharedPreferencesUtil;
+import com.ruthiy.care2car.utils.SharedPrefUtil;
 import com.ruthiy.care2car.tables.TablesContract;
 import com.ruthiy.care2car.utils.Config;
 import com.ruthiy.care2car.utils.views.MySpinnerAdapter;
@@ -120,7 +119,7 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
                     list.add(userLocation);
                     intent.putParcelableArrayListExtra("userLocation", list);
                     confirmOpenRequestDialog();
-                   new SendMessages().execute("https://fcm.googleapis.com/fcm/send", currentUser.getAreaId(), request.getRequestKey(), "false");
+                   new SendMessages().execute("https://fcm.googleapis.com/fcm/send", "all", request.getRequestKey(), "false");
                     /*intent.putExtra("request", request.getRequestKey());
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     if (intent != null) startActivity(intent);*/
@@ -200,7 +199,7 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
         Firebase.setAndroidContext(this);
         Firebase ref = new Firebase(Config.FIREBASE_REQUESTS_URL);
         //Storing values to firebase
-        String userToken = sharedPreferencesUtil.getUserTokenFromSP(this);
+        String userToken = SharedPrefUtil.getUserTokenFromSP(this);
         if (userToken != null) {
             request.setUserToken(userToken);
         }
@@ -208,9 +207,10 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
         ref.setValue(request);
         String requestKey = ref.getKey();
         request.setRequestKey(ref.getKey());
+        ref.setValue(request);
         Log.d("TSG", "saveRequestOnFireBase: "+requestKey);
 
-        Firebase fbUsers = new Firebase(Config.FIREBASE_REQUESTS_USER_URL + sharedPreferencesUtil.getUserKeyFromSP(this));
+        Firebase fbUsers = new Firebase(Config.FIREBASE_REQUESTS_USER_URL + SharedPrefUtil.getUserKeyFromSP(this));
         //Storing values to firebase
         fbUsers = fbUsers.push();
         fbUsers.setValue(request);
@@ -252,7 +252,7 @@ public class OpenRequest extends AppCompatActivity implements Serializable, Adap
     public boolean getUserDetailsFromFireBase(){
         Firebase.setAndroidContext(this);
         Firebase ref = new Firebase(Config.FIREBASE_USER_URL);
-        ref.child(sharedPreferencesUtil.getUserKeyFromSP(this)).addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.child(SharedPrefUtil.getUserKeyFromSP(this)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 System.out.println("There are " + snapshot.getChildrenCount() + " blog posts");

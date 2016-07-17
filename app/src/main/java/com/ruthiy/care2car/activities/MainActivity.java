@@ -2,10 +2,8 @@ package com.ruthiy.care2car.activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Address;
@@ -13,7 +11,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +34,7 @@ import com.ruthiy.care2car.R;
 import com.ruthiy.care2car.entities.User;
 import com.ruthiy.care2car.services.GPSTracker;
 import com.ruthiy.care2car.tables.TablesContract;
-import com.ruthiy.care2car.utils.sharedPreferencesUtil;
+import com.ruthiy.care2car.utils.SharedPrefUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
         buildGoogleApiClient();
 
-        currentUser = sharedPreferencesUtil.getUserFromSP(this);
+        currentUser = SharedPrefUtil.getUserFromSP(this);
         gpsFlag = true;
         /*ImageButton findLoc = (ImageButton)  findViewById(R.id.ib_findLocation);
         findLoc.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +78,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 getLocation();
             }
         });
-*/
+*/      
+        Button showRequests = (Button) findViewById(R.id.bn_showMyRequests);
+        showRequests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ShowRequestsActivity.class);
+                intent.putExtra("type", "request");
+                if (intent != null) startActivity(intent);
+            }
+        });
+
+        Button showVolunteering = (Button) findViewById(R.id.bn_showMyVolunteering);
+        showVolunteering.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ShowRequestsActivity.class);
+                intent.putExtra("type", "volunteer");
+                if (intent != null) startActivity(intent);
+            }
+        });
+
+
         Button button = (Button) findViewById(R.id.bn_ask4help);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

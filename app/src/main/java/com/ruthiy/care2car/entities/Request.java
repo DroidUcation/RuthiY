@@ -33,7 +33,7 @@ public class Request implements Serializable {
     Timestamp requestEndDate ;
     String requestStatusId ;
     String requestKey ;
-    long volunteerId ; //fk user table
+    String volunteerId ; //fk user table
     String remarks ;
 
     public Request() {
@@ -88,11 +88,11 @@ public class Request implements Serializable {
         this.requestEndDate = requestEndDate;
     }
 
-    public long getVolunteerId() {
+    public String getVolunteerId() {
         return volunteerId;
     }
 
-    public void setVolunteerId(long volunteerId) {
+    public void setVolunteerId(String volunteerId) {
         this.volunteerId = volunteerId;
     }
 

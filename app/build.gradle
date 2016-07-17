@@ -42,5 +42,6 @@ dependencies {
     //Adding Firebase
     compile 'com.firebase:firebase-client-android:2.4.0'
     compile 'com.squareup.okhttp3:okhttp:3.3.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
 }
 apply plugin: 'com.google.gms.google-services'

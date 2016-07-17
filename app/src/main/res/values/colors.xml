@@ -5,4 +5,6 @@
     <color name="colorAccent">#E0E0E0</color>
     <color name="white">#FFFFFF</color>
     <color name="black_87pc">#DD000000</color>
+    <color name="year">#999999</color>
+    <color name="title">#222222</color>
 </resources>
